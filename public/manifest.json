@@ -1,0 +1,16 @@
+{
+  "name": "LibraryHub",
+  "short_name": "LibraryHub",
+  "description": "LibraryHub is a modern cloud-powered Library Management System to browse books, check availability, and manage borrowing seamlessly.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0f172a",
+  "theme_color": "#0f172a",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "any",
+      "type": "image/x-icon"
+    }
+  ]
+}
