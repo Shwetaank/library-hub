@@ -168,7 +168,7 @@ const AboutPage: React.FC = () => {
 
             return (
               <motion.div key={index} variants={fadeUp} className="h-full">
-                <Card className="h-full flex flex-col p-8 rounded-2xl border bg-background/60 backdrop-blur-md hover:shadow-xl transition-all duration-300">
+                <Card className="h-full flex flex-col p-8 rounded-2xl border cursor-pointer bg-background/60 backdrop-blur-md hover:shadow-xl transition-all duration-300">
                   <div className="flex justify-center mb-6">
                     <Icon className="h-10 w-10 text-primary" />
                   </div>
@@ -177,7 +177,7 @@ const AboutPage: React.FC = () => {
                     {value.title}
                   </h3>
 
-                  <p className="text-sm sm:text-base text-foreground/70 leading-relaxed text-center">
+                  <p className="text-sm sm:text-base text-foreground/70 leading-relaxed text-justify">
                     {value.description}
                   </p>
                 </Card>
@@ -198,7 +198,7 @@ const AboutPage: React.FC = () => {
             Start Exploring Today
           </h2>
 
-          <p className="text-lg text-foreground/80 mx-auto mb-10 max-w-2xl">
+          <p className="text-lg text-foreground/80 mx-auto mb-10 text-justify">
             Discover books, check availability, and manage your library account
             with ease. Everything you need for a seamless reading experience is
             just a click away.

@@ -17,7 +17,9 @@ function createMssqlAdapter() {
     throw new Error("DATABASE_URL is required to initialize Prisma.");
   }
 
-  const [endpointPart, ...attributeParts] = raw.replace(/^sqlserver:\/\//i, "").split(";");
+  const [endpointPart, ...attributeParts] = raw
+    .replace(/^sqlserver:\/\//i, "")
+    .split(";");
   const [server, portPart] = endpointPart.split(":");
   const port = portPart ? Number(portPart) : 1433;
 
@@ -34,7 +36,9 @@ function createMssqlAdapter() {
   const password = attrs.get("password");
 
   if (!server || !database || !user || !password || Number.isNaN(port)) {
-    throw new Error("DATABASE_URL is not a valid SQL Server connection string.");
+    throw new Error(
+      "DATABASE_URL is not a valid SQL Server connection string.",
+    );
   }
 
   return new PrismaMssql({
@@ -45,12 +49,16 @@ function createMssqlAdapter() {
     password,
     options: {
       encrypt: toBoolean(attrs.get("encrypt"), true),
-      trustServerCertificate: toBoolean(attrs.get("trustservercertificate"), false),
+      trustServerCertificate: toBoolean(
+        attrs.get("trustservercertificate"),
+        false,
+      ),
     },
   });
 }
 
-export const prisma = globalForPrisma.prisma ?? new PrismaClient({ adapter: createMssqlAdapter() });
+export const prisma =
+  globalForPrisma.prisma ?? new PrismaClient({ adapter: createMssqlAdapter() });
 
 if (process.env.NODE_ENV !== "production") {
   globalForPrisma.prisma = prisma;

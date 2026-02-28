@@ -173,8 +173,8 @@ const Footer: React.FC = () => {
               <Link href="/privacy" className={linkClass}>
                 Privacy
               </Link>
-              <Link href="/terms" className={linkClass}>
-                Terms
+              <Link href="/help" className={linkClass}>
+                Help Center
               </Link>
             </div>
           </div>
@@ -228,8 +228,15 @@ const Footer: React.FC = () => {
 
           <p>
             © {new Date().getFullYear()}
-            <span className="font-semibold mx-1">LibraryHub</span>. All rights
-            reserved.
+            <span
+              className="mx-1 font-semibold bg-linear-to-r from-primary to-purple-500 bg-clip-text text-transparent cursor-pointer hover:underline"
+              onClick={() =>
+                window.open("https://libraryhub.vercel.app", "_blank")
+              }
+            >
+              LibraryHub.
+            </span>
+            All rights reserved.
           </p>
         </div>
 

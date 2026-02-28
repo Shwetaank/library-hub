@@ -1,63 +1,98 @@
+// -----------------------------------------------------------------------------
+// PRISMA CLIENT CONFIGURATION
+// -----------------------------------------------------------------------------
+
 generator client {
   provider = "prisma-client-js"
+  // Custom output directory for the generated client
   output   = "../src/generated/prisma"
 }
 
 datasource db {
   provider = "sqlserver"
+  // Note: You will need a database URL to connect to SQL Server. 
+  // Example: url = env("DATABASE_URL")
 }
 
+// -----------------------------------------------------------------------------
+// DATA MODELS
+// -----------------------------------------------------------------------------
+
+/// Represents a registered user or administrator in the system.
 model User {
   id        Int      @id @default(autoincrement())
   name      String
   email     String   @unique
-  password  String
-  role      String   @default("USER")
+  password  String /// Hashed password for authentication
+  role      String   @default("USER") /// e.g., "USER" or "ADMIN"
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  borrows   Borrow[]
-  favorites Favorite[]
+  // Relationships
+  borrows   Borrow[] /// History of books borrowed by this user
+  favorites Favorite[] /// Books this user has marked as favorite
 }
 
+/// Represents a book available in the library catalog.
 model Book {
   id          Int      @id @default(autoincrement())
   title       String
   description String
   author      String
   genre       String
-  totalCopies Int
-  available   Int
-  coverUrl    String?
+  totalCopies Int /// Total physical copies owned by the library
+  available   Int /// Number of copies currently available to borrow
+  coverUrl    String? /// Optional URL to the book's cover image
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  borrows   Borrow[]
-  favorites Favorite[]
+  // Relationships
+  borrows   Borrow[] /// Borrowing history for this specific book
+  favorites Favorite[] /// Users who have favorited this book
 }
 
+/// Represents a transaction of a user borrowing a specific book.
 model Borrow {
   id         String   @id @default(uuid())
   userId     Int
   bookId     Int
   borrowedAt DateTime @default(now())
-  dueDate    DateTime
-  returned   Boolean  @default(false)
+  dueDate    DateTime /// The date the book is expected to be returned
+  returned   Boolean  @default(false) /// Status flag indicating if the book is back
 
+  // Relationships (Cascade delete ensures if a User/Book is deleted, their borrow history goes with them)
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
   book Book @relation(fields: [bookId], references: [id], onDelete: Cascade)
 
+  // Indexes to speed up queries when filtering by user or book
   @@index([userId])
   @@index([bookId])
 }
 
+/// A join table representing a user's favorite books.
 model Favorite {
   id     String @id @default(uuid())
   userId Int
   bookId Int
 
+  // Relationships
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
   book Book @relation(fields: [bookId], references: [id], onDelete: Cascade)
 
+  // Prevents a user from favoriting the exact same book more than once
   @@unique([userId, bookId])
+}
+
+/// Stores submissions from a "Contact Us" or support form.
+model ContactRequest {
+  id           Int      @id @default(autoincrement())
+  name         String
+  email        String
+  organization String
+  message      String
+  createdAt    DateTime @default(now())
+
+  // Indexes to optimize searching for tickets by email or sorting by date
+  @@index([email])
+  @@index([createdAt])
 }
