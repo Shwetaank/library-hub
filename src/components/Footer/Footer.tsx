@@ -4,13 +4,13 @@ import React, { useState } from "react";
 import Link from "next/link";
 import {
   BookOpen,
-  Github,
-  Linkedin,
+  GithubIcon,
+  LinkedinIcon,
   X,
   Globe,
   Database,
   Server,
-  Youtube,
+  YoutubeIcon,
   Code2,
 } from "lucide-react";
 import { motion } from "framer-motion";
@@ -65,15 +65,15 @@ const Footer: React.FC = () => {
   };
 
   const socialLinks = [
-    { icon: Github, href: "https://github.com/Shwetaank", label: "GitHub" },
+    { icon: GithubIcon, href: "https://github.com/Shwetaank", label: "GitHub" },
     {
-      icon: Linkedin,
+      icon: LinkedinIcon,
       href: "https://www.linkedin.com/in/shwetank-morey-a35484257/",
       label: "LinkedIn",
     },
     { icon: X, href: "https://x.com/Sin_Greed___", label: "X (Twitter)" },
     {
-      icon: Youtube,
+      icon: YoutubeIcon,
       href: "https://www.youtube.com/@Sin_Greed",
       label: "YouTube",
     },
@@ -95,10 +95,10 @@ const Footer: React.FC = () => {
       <div className="container mx-auto px-6 sm:px-10 lg:px-12 py-16 sm:py-20">
         <div className="grid gap-14 lg:grid-cols-5">
           {/* ================= Brand ================= */}
-          <div className="lg:col-span-2 space-y-6 text-center lg:text-left">
+          <div className="lg:col-span-2 space-y-6 text-center lg:text-left cursor-pointer">
             <div className="flex items-center justify-center lg:justify-start gap-3">
-              <BookOpen className="h-10 w-10 text-primary" />
-              <h2 className="text-4xl font-bold bg-linear-to-r from-primary to-purple-500 bg-clip-text text-transparent">
+              <BookOpen className="h-10 w-10 text-primary animate-pulse" />
+              <h2 className="text-4xl font-bold pb-1 bg-linear-to-r from-primary to-purple-500 bg-clip-text text-transparent">
                 LibraryHub
               </h2>
 

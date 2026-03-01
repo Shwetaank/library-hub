@@ -57,7 +57,7 @@ const LiveCounter: React.FC<LiveCounterProps> = ({ value }) => {
   }, [value, motionValue]);
 
   return (
-    <motion.span className="text-5xl sm:text-6xl font-bold font-mono bg-linear-to-r from-primary to-indigo-500 bg-clip-text text-transparent">
+    <motion.span className="text-5xl sm:text-6xl font-bold font-mono bg-linear-to-r from-primary to-purple-500 bg-clip-text text-transparent">
       {display}
     </motion.span>
   );

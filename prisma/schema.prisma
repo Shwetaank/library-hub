@@ -10,8 +10,7 @@ generator client {
 
 datasource db {
   provider = "sqlserver"
-  // Note: You will need a database URL to connect to SQL Server. 
-  // Example: url = env("DATABASE_URL")
+  // Connection URL is configured in prisma.config.ts for Prisma 7.
 }
 
 // -----------------------------------------------------------------------------

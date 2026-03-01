@@ -76,7 +76,7 @@ const AboutPage: React.FC = () => {
           variants={fadeUp}
           className="text-center mb-20"
         >
-          <h1 className="text-4xl pb-10 sm:text-6xl font-bold bg-linear-to-r from-primary to-indigo-500 bg-clip-text text-transparent">
+          <h1 className="text-4xl pb-10 sm:text-6xl font-bold bg-linear-to-r from-primary to-purple-500 bg-clip-text text-transparent">
             About LibraryHub
           </h1>
 
@@ -96,7 +96,7 @@ const AboutPage: React.FC = () => {
           viewport={{ once: true }}
           className="rounded-3xl border bg-background/70 backdrop-blur-md p-8 sm:p-14 mb-24 shadow-sm"
         >
-          <h2 className="text-3xl sm:text-4xl font-semibold text-center mb-6">
+          <h2 className="text-3xl sm:text-4xl font-semibold text-center bg-linear-to-r from-primary to-purple-500 bg-clip-text text-transparent  mb-6">
             Our Mission
           </h2>
 
@@ -161,7 +161,7 @@ const AboutPage: React.FC = () => {
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true }}
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mb-28"
+          className="grid grid-cols-1 sm:grid-cols-2 gap-8 mb-28"
         >
           {values.map((value, index) => {
             const Icon = value.icon;
@@ -170,14 +170,12 @@ const AboutPage: React.FC = () => {
               <motion.div key={index} variants={fadeUp} className="h-full">
                 <Card className="h-full flex flex-col p-8 rounded-2xl border cursor-pointer bg-background/60 backdrop-blur-md hover:shadow-xl transition-all duration-300">
                   <div className="flex justify-center mb-6">
-                    <Icon className="h-10 w-10 text-primary" />
+                    <Icon className="h-10 w-10 animate-pulse " />
                   </div>
-
-                  <h3 className="text-xl font-semibold mb-4 text-center">
+                  <h3 className="text-xl font-semibold mb-4 text-center bg-linear-to-r from-primary to-purple-500 bg-clip-text text-transparent">
                     {value.title}
                   </h3>
-
-                  <p className="text-sm sm:text-base text-foreground/70 leading-relaxed text-justify">
+                  <p className="text-sm sm:text-base text-foreground/70 leading-relaxed text-center">
                     {value.description}
                   </p>
                 </Card>
@@ -194,7 +192,7 @@ const AboutPage: React.FC = () => {
           viewport={{ once: true }}
           className="rounded-3xl border bg-linear-to-r from-primary/10 to-indigo-500/10 p-10 sm:p-16 text-center backdrop-blur-md"
         >
-          <h2 className="text-3xl sm:text-4xl font-semibold mb-6">
+          <h2 className="text-3xl sm:text-4xl font-semibold mb-6 leading-tight bg-linear-to-r from-primary to-purple-500 bg-clip-text text-transparent">
             Start Exploring Today
           </h2>
 
@@ -204,18 +202,20 @@ const AboutPage: React.FC = () => {
             just a click away.
           </p>
 
-          <div className="flex flex-col sm:flex-row gap-6 justify-center">
+          <div className="flex flex-col sm:flex-row gap-10 justify-center">
             <Button
               asChild
               size="lg"
-              className="bg-linear-to-r from-primary to-indigo-500 hover:opacity-90"
+              className="bg-linear-to-r from-primary to-purple-500 hover:opacity-90"
             >
               <Link href="/books">Explore Books</Link>
             </Button>
 
-            <Button asChild variant="outline" size="lg">
-              <Link href="/dashboard">Go to Dashboard</Link>
-            </Button>
+            <div className="inline-block p-0.5 rounded-lg bg-linear-to-r from-primary to-purple-500">
+              <Button asChild size="lg" variant="outline">
+                <Link href="/dashboard">Go to Dashboard</Link>
+              </Button>
+            </div>
           </div>
         </motion.div>
       </section>
