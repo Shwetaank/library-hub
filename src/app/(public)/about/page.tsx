@@ -211,10 +211,18 @@ const AboutPage: React.FC = () => {
               <Link href="/books">Explore Books</Link>
             </Button>
 
-            <div className="inline-block p-0.5 rounded-lg bg-linear-to-r from-primary to-purple-500">
-              <Button asChild size="lg" variant="outline">
-                <Link href="/dashboard">Go to Dashboard</Link>
-              </Button>
+            <div className="w-full sm:w-auto">
+              <div className="w-full sm:w-auto rounded-xl bg-linear-to-r from-primary to-purple-500 p-0.5">
+                <Button
+                  asChild
+                  size="lg"
+                  className="w-full sm:w-auto rounded-[10px] bg-background text-foreground border-0 hover:bg-background/90"
+                >
+                  <Link href="/dashboard" className="w-full text-center">
+                    Go to Dashboard
+                  </Link>
+                </Button>
+              </div>
             </div>
           </div>
         </motion.div>
