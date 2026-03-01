@@ -185,9 +185,11 @@ const SectionCard = React.memo(
         <CardContent className="p-8 space-y-5 flex flex-col h-full">
           <div className="flex items-center gap-4">
             <div className="p-3 rounded-xl bg-linear-to-br from-primary/20 to-primary/5 text-primary transition-transform duration-300 group-hover:scale-110">
-              <Icon className="w-5 h-5" />
+              <Icon className="w-5 h-5 animate-pulse" />
             </div>
-            <h3 className="text-lg font-semibold tracking-tight">{title}</h3>
+            <h3 className="text-lg font-bold tracking-tight bg-linear-to-r from-primary to-purple-500 bg-clip-text text-transparent hover:underline hover:underline-offset-2">
+              {title}
+            </h3>
           </div>
 
           <p className="text-muted-foreground leading-relaxed text-sm sm:text-base text-justify grow">
@@ -228,7 +230,7 @@ const PrivacyTermsPage: React.FC = () => {
             <Badge variant="outline">Version {LEGAL_META.version}</Badge>
           </div>
 
-          <h1 className="text-4xl sm:text-5xl font-bold tracking-tight leading-[1.2] pb-1 bg-linear-to-r from-primary via-purple-500 to-indigo-500 bg-clip-text text-transparent">
+          <h1 className="text-4xl sm:text-5xl font-bold tracking-tight leading-[1.2] pb-1 bg-linear-to-r from-primary to-purple-500 bg-clip-text text-transparent">
             Privacy Policy & Terms
           </h1>
 
