@@ -1,5 +1,5 @@
-
 export type Club = {
+  image: string;
   id: string;
   name: string;
   description: string;
@@ -16,8 +16,10 @@ export type Club = {
 export const MOCK_CLUBS: Club[] = [
   {
     id: "1",
+    image: "/images/clubs/mystery.png",
     name: "The Midnight Readers",
-    description: "For those who find solace in the quiet hours of the night with a good book. We explore thrillers, mysteries, and dark fantasy.",
+    description:
+      "For those who find solace in the quiet hours of the night with a good book. We explore thrillers, mysteries, and dark fantasy.",
     category: "mystery",
     privacy: "public",
     members: 128,
@@ -29,8 +31,10 @@ export const MOCK_CLUBS: Club[] = [
   },
   {
     id: "2",
+    image: "/images/clubs/sci-fi.png",
     name: "Sci-Fi Voyagers",
-    description: "Journey through distant galaxies, alternate realities, and speculative futures. Open to all fans of science fiction.",
+    description:
+      "Journey through distant galaxies, alternate realities, and speculative futures. Open to all fans of science fiction.",
     category: "sci-fi",
     privacy: "public",
     members: 256,
@@ -42,8 +46,10 @@ export const MOCK_CLUBS: Club[] = [
   },
   {
     id: "3",
+    image: "/images/clubs/romance.png",
     name: "Romance Readers Society",
-    description: "A cozy corner for fans of love stories. From historical romance to contemporary tales, we read it all.",
+    description:
+      "A cozy corner for fans of love stories. From historical romance to contemporary tales, we read it all.",
     category: "romance",
     privacy: "public",
     members: 89,
@@ -55,8 +61,10 @@ export const MOCK_CLUBS: Club[] = [
   },
   {
     id: "4",
+    image: "/images/clubs/non-fiction.png",
     name: "The Non-Fiction Guild",
-    description: "Dedicated to exploring the world through facts, history, and real-life stories. Biographies, science, and more.",
+    description:
+      "Dedicated to exploring the world through facts, history, and real-life stories. Biographies, science, and more.",
     category: "non-fiction",
     privacy: "private",
     members: 42,
@@ -68,8 +76,10 @@ export const MOCK_CLUBS: Club[] = [
   },
   {
     id: "5",
+    image: "/images/clubs/fiction.png",
     name: "Classic Literature Club",
-    description: "Revisiting the timeless classics and discussing their relevance in today's world. Join us for a journey through literary history.",
+    description:
+      "Revisiting the timeless classics and discussing their relevance in today's world. Join us for a journey through literary history.",
     category: "fiction",
     privacy: "public",
     members: 153,
@@ -77,19 +87,6 @@ export const MOCK_CLUBS: Club[] = [
       title: "To Kill a Mockingbird",
       author: "Harper Lee",
       discussionDate: "2026-04-05",
-    },
-  },
-  {
-    id: "6",
-    name: "Fantasy Fellowship",
-    description: "A club for adventurers, dreamers, and lovers of magic. We delve into epic fantasies and magical realism.",
-    category: "fiction",
-    privacy: "private",
-    members: 77,
-    currentBook: {
-      title: "The Name of the Wind",
-      author: "Patrick Rothfuss",
-      discussionDate: "2026-04-10",
     },
   },
 ];

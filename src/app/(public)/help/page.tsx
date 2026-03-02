@@ -5,281 +5,205 @@ import { motion, AnimatePresence } from "framer-motion";
 import type { LucideIcon } from "lucide-react";
 import {
   Search,
-  BookMarked,
+  BookOpen,
+  ShieldCheck,
   Users,
   HelpCircle,
   Star,
-  ArrowUpRight,
-  ShieldCheck,
-  BookOpen,
+  ArrowRight,
+  Sparkles,
 } from "lucide-react";
 
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-
 import Link from "next/link";
 
 /* -------------------------------------------------------------------------- */
-/*                                   Types                                    */
+/*                                   TYPES                                    */
 /* -------------------------------------------------------------------------- */
+
+interface HelpArticle {
+  title: string;
+  categoryId: string;
+}
 
 interface HelpCategory {
   id: string;
-  icon: LucideIcon;
   title: string;
-  description: string;
-  articles: string[];
+  icon: LucideIcon;
 }
 
 /* -------------------------------------------------------------------------- */
-/*                                   Data                                     */
+/*                                   DATA                                     */
 /* -------------------------------------------------------------------------- */
 
-const helpCategories: HelpCategory[] = [
-  {
-    id: "getting-started",
-    icon: BookMarked,
-    title: "Getting Started",
-    description:
-      "Set up your account, explore your dashboard, and borrow your first book.",
-    articles: [
-      "Create an Account",
-      "Verify Your Email",
-      "Complete Your Profile",
-      "Borrow Your First Book",
-    ],
-  },
-  {
-    id: "finding-books",
-    icon: Search,
-    title: "Finding Books",
-    description:
-      "Discover books using advanced search, filters, and personalized recommendations.",
-    articles: [
-      "Use Advanced Search",
-      "Browse by Category",
-      "Filter by Author or Genre",
-      "View Personalized Recommendations",
-    ],
-  },
-  {
-    id: "community",
-    icon: Users,
-    title: "Community & Reviews",
-    description:
-      "Connect with readers, write reviews, and manage your favorites.",
-    articles: [
-      "Write and Edit Reviews",
-      "Manage Favorite Books",
-      "Follow Other Readers",
-      "Share Reading Lists",
-    ],
-  },
-  {
-    id: "borrowing",
-    icon: BookOpen,
-    title: "Borrowing & Returns",
-    description:
-      "Understand borrowing limits, renewal policies, and return workflows.",
-    articles: [
-      "Borrowing Limits",
-      "Renew a Book",
-      "Return a Borrowed Book",
-      "Track Borrow History",
-    ],
-  },
-  {
-    id: "account-security",
-    icon: ShieldCheck,
-    title: "Account & Security",
-    description:
-      "Manage account settings, password changes, and privacy preferences.",
-    articles: [
-      "Change Password",
-      "Enable Two-Factor Authentication",
-      "Update Email Address",
-      "Manage Privacy Settings",
-    ],
-  },
-  {
-    id: "troubleshooting",
-    icon: HelpCircle,
-    title: "Troubleshooting",
-    description:
-      "Resolve login issues, borrowing errors, and technical platform problems.",
-    articles: [
-      "Login Issues",
-      "Borrowing Errors",
-      "Payment or Subscription Problems",
-      "Contact Technical Support",
-    ],
-  },
+const HELP_CATEGORIES: HelpCategory[] = [
+  { id: "getting-started", title: "Getting Started", icon: BookOpen },
+  { id: "borrowing", title: "Borrowing & Returns", icon: Sparkles },
+  { id: "account-security", title: "Account & Security", icon: ShieldCheck },
+  { id: "community", title: "Community & Reviews", icon: Users },
+  { id: "troubleshooting", title: "Troubleshooting", icon: HelpCircle },
+];
+
+const HELP_ARTICLES: HelpArticle[] = [
+  { title: "Create an Account", categoryId: "getting-started" },
+  { title: "Verify Email", categoryId: "getting-started" },
+  { title: "Borrowing Limits", categoryId: "borrowing" },
+  { title: "Renew a Book", categoryId: "borrowing" },
+  { title: "Return a Book", categoryId: "borrowing" },
+  { title: "Change Password", categoryId: "account-security" },
+  { title: "Enable Two-Factor Authentication", categoryId: "account-security" },
+  { title: "Write Reviews", categoryId: "community" },
+  { title: "Login Issues", categoryId: "troubleshooting" },
 ];
 
 /* -------------------------------------------------------------------------- */
-/*                              Animation Config                              */
-/* -------------------------------------------------------------------------- */
-
-const cardVariants = {
-  hidden: { opacity: 0, y: 15 },
-  visible: { opacity: 1, y: 0 },
-  exit: { opacity: 0 },
-};
-
-/* -------------------------------------------------------------------------- */
-/*                                 Component                                  */
+/*                                COMPONENT                                   */
 /* -------------------------------------------------------------------------- */
 
 const HelpCenterPage: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState<string>("");
+  const [activeCategory, setActiveCategory] = useState<string>(
+    HELP_CATEGORIES[0].id,
+  );
 
-  const filteredCategories = useMemo(() => {
-    const query = searchQuery.toLowerCase();
+  /* ---------------------- Filter Articles Globally ---------------------- */
 
-    return helpCategories.filter(
-      (category) =>
-        category.title.toLowerCase().includes(query) ||
-        category.description.toLowerCase().includes(query) ||
-        category.articles.some((article) =>
-          article.toLowerCase().includes(query),
-        ),
+  const filteredArticles = useMemo(() => {
+    if (!searchQuery) {
+      return HELP_ARTICLES.filter(
+        (article) => article.categoryId === activeCategory,
+      );
+    }
+
+    return HELP_ARTICLES.filter((article) =>
+      article.title.toLowerCase().includes(searchQuery.toLowerCase()),
     );
-  }, [searchQuery]);
+  }, [searchQuery, activeCategory]);
 
   return (
-    <div className="relative min-h-screen bg-linear-to-b from-background to-muted/30 overflow-hidden">
-      {/* Background Glow */}
-      <div className="absolute inset-0 -z-10 flex justify-center">
-        <div className="w-150 h-150 bg-primary/10 blur-3xl rounded-full -mt-40" />
-      </div>
-
-      <section className="max-w-7xl mx-auto px-6 py-20">
+    <div className="relative min-h-screen bg-linear-to-b from-background via-muted/30 to-background overflow-hidden">
+      <div className="max-w-7xl mx-auto px-6 py-20">
         {/* ================= HERO ================= */}
 
-        <header className="text-center mb-16">
-          <Badge className="mb-4 bg-primary/10 text-primary border-primary/20 animate-pulse">
-            <ShieldCheck className="w-6 h-6 mr-2" />
-            Trusted by 10,000+ Readers
+        <section className="text-center mb-24">
+          <Badge className="mb-6 bg-primary/10 text-primary border-primary/20 animate-pulse">
+            <ShieldCheck className="w-4 h-4 mr-2" />
+            99.9% Platform Uptime • 24h Support
           </Badge>
 
-          <h1 className="text-4xl sm:text-5xl font-bold tracking-tight leading-\[1.2] pb-1 bg-linear-to-r from-primary to-purple-500 bg-clip-text text-transparent">
-            How Can We Help?
+          <h1 className="text-4xl pb-10 sm:text-6xl font-bold bg-linear-to-r from-primary to-purple-500 bg-clip-text text-transparent">
+            How can we help you today ?
           </h1>
 
-          <p className="text-lg text-muted-foreground mx-auto mb-8 text-justify">
-            Access comprehensive guides, tutorials, and resources to help you
-            navigate our products and services efficiently. Whether you&apos;re
-            a beginner or an advanced user, our documentation is designed to
-            provide clear, step-by-step instructions for all your needs.
+          <p className="text-muted-foreground mx-auto mb-10 text-lg">
+            Search across our knowledge base to find guides, tutorials, and
+            troubleshooting resources instantly.
           </p>
 
-          {/* Search */}
-          <div className="relative max-w-xl mx-auto">
-            <Search
-              className="absolute left-4 top-3.5 h-5 w-5 text-muted-foreground"
-              aria-hidden
-            />
+          <div className="relative max-w-2xl mx-auto">
+            <Search className="absolute left-5 top-4 w-5 h-5 text-muted-foreground" />
             <Input
-              aria-label="Search help articles"
-              placeholder="Search documentation..."
+              placeholder="Search articles..."
+              className="pl-14 h-14 rounded-2xl text-base shadow-sm"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-12 h-12 rounded-xl"
             />
           </div>
-        </header>
+        </section>
 
-        {/* ================= CATEGORIES ================= */}
+        {/* ================= LAYOUT ================= */}
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-20">
-          <AnimatePresence>
-            {filteredCategories.map((category) => {
+        <section className="grid lg:grid-cols-4 gap-12">
+          {/* Sidebar */}
+          <aside className="lg:col-span-1 space-y-2 sticky top-28 h-fit">
+            {HELP_CATEGORIES.map((category) => {
               const Icon = category.icon;
+              const isActive = activeCategory === category.id;
 
               return (
-                <motion.div
+                <button
                   key={category.id}
-                  variants={cardVariants}
-                  initial="hidden"
-                  animate="visible"
-                  exit="exit"
-                  transition={{ duration: 0.3 }}
+                  onClick={() => {
+                    setSearchQuery("");
+                    setActiveCategory(category.id);
+                  }}
+                  className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition text-left ${
+                    isActive
+                      ? "bg-linear-to-r from-primary to-purple-500 text-primary-foreground cursor-pointer shadow "
+                      : "hover:bg-muted cursor-pointer hover:shadow"
+                  }`}
                 >
-                  <Card className="group cursor-pointer p-8 rounded-2xl border border-border/50 bg-background/70 backdrop-blur hover:shadow-2xl hover:-translate-y-1 transition-all duration-300">
-                    <div className="flex items-center justify-between mb-4">
-                      <div className="p-3 rounded-xl bg-primary/10 text-primary">
-                        <Icon className="w-6 h-6" />
-                      </div>
-                      <ArrowUpRight className="w-5 h-5 opacity-0 group-hover:opacity-100 transition" />
-                    </div>
-
-                    <h3 className="text-xl font-semibold mb-2  bg-linear-to-r from-primary to-purple-500 bg-clip-text text-transparent">
-                      {category.title}
-                    </h3>
-
-                    <p className="text-muted-foreground text-sm mb-4 text-justify">
-                      {category.description}
-                    </p>
-
-                    <ul className="space-y-2">
-                      {category.articles.map((article) => (
-                        <li
-                          key={article}
-                          className="text-sm text-primary underline cursor-pointer font-semibold"
-                        >
-                          {article}
-                        </li>
-                      ))}
-                    </ul>
-                  </Card>
-                </motion.div>
+                  <Icon className="w-4 h-4" />
+                  {category.title}
+                </button>
               );
             })}
-          </AnimatePresence>
-        </div>
+          </aside>
 
-        {/* ================= POPULAR ================= */}
+          {/* Articles */}
+          <div className="lg:col-span-3">
+            <Card className="p-10 rounded-3xl backdrop-blur border border-border/60 shadow-xl">
+              <h2 className="text-2xl font-bold mb-8 flex items-center cursor-pointer underline underline-offset-3  gap-6">
+                <Star className="w-10 h-10 text-yellow-600 animate-pulse " />
+                Articles
+              </h2>
 
-        <section className="mb-20">
-          <h2 className="text-2xl font-bold mb-6 flex items-center gap-2">
-            <Star className="w-5 h-5 text-yellow-500" />
-            Popular Guides
-          </h2>
+              <AnimatePresence mode="wait">
+                <motion.ul
+                  key={searchQuery + activeCategory}
+                  initial={{ opacity: 0, y: 15 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.25 }}
+                  className="space-y-4"
+                >
+                  {filteredArticles.map((article) => (
+                    <li
+                      key={article.title}
+                      className="group flex justify-between items-center p-5 rounded-2xl border border-border/50 hover:bg-muted/50 hover:shadow-md transition cursor-pointer"
+                    >
+                      <span className="font-medium">{article.title}</span>
+                      <ArrowRight className="w-4 h-4 opacity-50 group-hover:translate-x-1 transition" />
+                    </li>
+                  ))}
 
-          <div className="grid md:grid-cols-2 gap-6">
-            <Card className="p-6 rounded-xl hover:shadow-lg transition">
-              Managing your reading goals efficiently
-            </Card>
-            <Card className="p-6 rounded-xl hover:shadow-lg transition">
-              Understanding borrowing limits & renewals
+                  {filteredArticles.length === 0 && (
+                    <div className="text-center py-10 text-muted-foreground">
+                      No articles found.
+                    </div>
+                  )}
+                </motion.ul>
+              </AnimatePresence>
             </Card>
           </div>
         </section>
+
         {/* ================= CTA ================= */}
 
-        <section>
-          <Card className="text-center p-12 rounded-2xl bg-linear-to-r from-primary/10 to-accent/10 border border-border/50 shadow-lg">
-            <h2 className="text-3xl font-bold mb-4  bg-linear-to-r from-primary to-purple-500 bg-clip-text text-transparent">
+        <section className="mt-28">
+          <Card className="text-center p-14 rounded-3xl bg-linear-to-r from-primary/10 to-purple-500/10 border shadow-lg">
+            <h2 className="text-3xl font-bold mb-4 bg-linear-to-r from-primary to-purple-500 bg-clip-text text-transparent">
               Still need help?
             </h2>
 
-            <p className="text-muted-foreground mb-6 text-justify">
-              Our support team responds within 24 hours. Premium members get
-              priority support.
+            <p className="text-muted-foreground mb-8 text-lg">
+              Our support team typically responds within 24 hours. Premium
+              members receive priority support.
             </p>
 
             <Button
               size="lg"
               asChild
-              className="bg-linear-to-r from-primary to-indigo-500"
+              className="bg-linear-to-r from-primary to-purple-500 rounded-xl px-8"
             >
               <Link href="/contact">Contact Support</Link>
             </Button>
           </Card>
         </section>
-      </section>
+      </div>
     </div>
   );
 };
