@@ -1,6 +1,11 @@
 "use client";
 
-import React, { useMemo, useState, useCallback } from "react";
+import React, {
+  useMemo,
+  useState,
+  useCallback,
+  useSyncExternalStore,
+} from "react";
 import Image from "next/image";
 import { motion, Variants, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
@@ -8,6 +13,7 @@ import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Club, MOCK_CLUBS } from "./data";
 import { formatDate } from "@/utils/helpers";
+import { toast } from "sonner";
 import {
   Users,
   Calendar,
@@ -16,6 +22,29 @@ import {
   Sparkles,
   TrendingUp,
 } from "lucide-react";
+
+/* -------------------------------------------------------------------------- */
+/* localStorage Store for Joined Clubs                                        */
+/* -------------------------------------------------------------------------- */
+
+const listeners = new Set<() => void>();
+
+const joinedClubsStore = {
+  get() {
+    if (typeof window === "undefined") {
+      return "[]";
+    }
+    return localStorage.getItem("joinedClubs") || "[]";
+  },
+  set(newValue: string[]) {
+    localStorage.setItem("joinedClubs", JSON.stringify(newValue));
+    listeners.forEach((l) => l());
+  },
+  subscribe(listener: () => void) {
+    listeners.add(listener);
+    return () => listeners.delete(listener);
+  },
+};
 
 /* -------------------------------------------------------------------------- */
 /* Animation Variants                                                         */
@@ -56,7 +85,7 @@ const categoryColors: Record<string, string> = {
 interface ClubCardProps {
   club: Club;
   isJoined: boolean;
-  onToggle: (id: string, joining: boolean) => void;
+  onToggle: (id: string) => void;
 }
 
 const ClubCard = React.memo(({ club, isJoined, onToggle }: ClubCardProps) => {
@@ -68,7 +97,7 @@ const ClubCard = React.memo(({ club, isJoined, onToggle }: ClubCardProps) => {
       transition={{ type: "spring", stiffness: 220, damping: 18 }}
     >
       <Card className="rounded-2xl border border-border/60 bg-background shadow-sm hover:shadow-xl transition-all flex flex-col overflow-hidden group">
-        {/* IMAGE COVER */}
+        {/* IMAGE */}
         <div className="relative h-44 w-full overflow-hidden">
           <Image
             src={club.image}
@@ -76,15 +105,17 @@ const ClubCard = React.memo(({ club, isJoined, onToggle }: ClubCardProps) => {
             fill
             className="object-cover group-hover:scale-105 transition-transform duration-500"
             sizes="(max-width: 768px) 100vw, 33vw"
+            loading="eager"
           />
-          {/* Premium Gradient Overlay */}
           <div className="absolute inset-0 bg-linear-to-t from-black/50 to-transparent" />
         </div>
 
         <div className="p-5 flex flex-col flex-1">
-          <h3 className="font-semibold text-lg mb-2">{club.name}</h3>
+          <h3 className="font-semibold  bg-linear-to-r from-primary to-purple-500 bg-clip-text text-transparent text-lg  mb-2">
+            {club.name}
+          </h3>
 
-          {/* Tags */}
+          {/* TAGS */}
           <div className="flex flex-wrap gap-2 mb-3">
             <span
               className={`text-xs px-3 py-1 rounded-full border capitalize font-medium ${
@@ -103,35 +134,35 @@ const ClubCard = React.memo(({ club, isJoined, onToggle }: ClubCardProps) => {
             )}
           </div>
 
-          <p className="text-sm text-muted-foreground line-clamp-2 mb-4">
+          <p className="text-sm text-muted-foreground text-justify line-clamp-2 mb-4">
             {club.description}
           </p>
 
-          {/* Current Book */}
-          <div className="bg-muted/40 rounded-lg p-3 mb-4 text-xs">
+          {/* CURRENT BOOK */}
+          <div className="bg-muted/40 rounded-lg p-3 mb-4 text-md">
             <p className="font-medium">{club.currentBook.title}</p>
             <p className="text-muted-foreground">{club.currentBook.author}</p>
           </div>
 
-          {/* Meta */}
+          {/* META */}
           <div className="flex items-center justify-between text-sm mb-4">
             <div className="flex items-center gap-1">
               <Users className="w-4 h-4 text-primary" />
               {club.members.toLocaleString()}
             </div>
 
-            <div className="flex items-center gap-1 text-muted-foreground text-xs">
-              <Calendar className="w-3 h-3" />
+            <div className="flex items-center gap-2 text-muted-foreground text-xs">
+              <Calendar className="w-4 h-4 animate-pulse" />
               {formatDate(club.currentBook.discussionDate)}
             </div>
           </div>
 
-          {/* Join Button */}
+          {/* JOIN BUTTON */}
           <motion.div whileTap={{ scale: 0.95 }}>
             <Button
-              onClick={() => onToggle(club.id, !isJoined)}
+              onClick={() => onToggle(club.id)}
               variant={isJoined ? "default" : "outline"}
-              className="w-full mt-auto rounded-xl"
+              className="w-full mt-auto rounded-2xl text-white  bg-linear-to-r from-primary to-purple-500 cursor-pointer "
             >
               {isJoined ? "Joined ✓" : "Join Club"}
             </Button>
@@ -150,25 +181,56 @@ ClubCard.displayName = "ClubCard";
 
 const ClubsPage: React.FC = () => {
   const [search, setSearch] = useState("");
-  const [joined, setJoined] = useState<string[]>([]);
+  const [clubs, setClubs] = useState<Club[]>(MOCK_CLUBS);
 
-  const toggleJoin = useCallback((id: string, joining: boolean) => {
-    setJoined((prev) =>
-      joining ? [...prev, id] : prev.filter((c) => c !== id),
+  const joinedJSON = useSyncExternalStore(
+    joinedClubsStore.subscribe,
+    joinedClubsStore.get,
+    () => "[]",
+  );
+  const joined: string[] = useMemo(() => JSON.parse(joinedJSON), [joinedJSON]);
+
+  const toggleJoin = useCallback((id: string) => {
+    const currentJoined: string[] = JSON.parse(joinedClubsStore.get());
+    const isJoining = !currentJoined.includes(id);
+
+    setClubs((prevClubs) =>
+      prevClubs.map((club) =>
+        club.id === id
+          ? {
+              ...club,
+              members: isJoining
+                ? club.members + 1
+                : Math.max(0, club.members - 1),
+            }
+          : club,
+      ),
     );
+
+    let newJoined: string[];
+    if (isJoining) {
+      toast.success("Successfully joined the club 🎉");
+      newJoined = [...currentJoined, id];
+    } else {
+      toast.info("You left the club");
+      newJoined = currentJoined.filter((c) => c !== id);
+    }
+    joinedClubsStore.set(newJoined);
   }, []);
+
+  /* ---------------- Filtering ---------------- */
 
   const filtered = useMemo(() => {
     const q = search.toLowerCase();
-    return MOCK_CLUBS.filter(
+    return clubs.filter(
       (club) =>
         club.name.toLowerCase().includes(q) ||
         club.description.toLowerCase().includes(q) ||
         club.category.toLowerCase().includes(q),
     );
-  }, [search]);
+  }, [search, clubs]);
 
-  const featured = useMemo(() => MOCK_CLUBS.slice(0, 3), []);
+  const featured = useMemo(() => clubs.slice(0, 3), [clubs]);
 
   return (
     <div className="min-h-screen bg-background">
@@ -180,13 +242,9 @@ const ClubsPage: React.FC = () => {
           variants={fadeUp}
           className="max-w-5xl mx-auto text-center"
         >
-          <h1 className="text-4xl sm:text-5xl font-bold tracking-tight mb-6">
-            Community-Driven Reading Experience
+          <h1 className="text-4xl pb-10 sm:text-6xl font-bold bg-linear-to-r from-primary to-purple-500 bg-clip-text text-transparent">
+            Community Driven Reading Experience
           </h1>
-
-          <p className="text-muted-foreground max-w-2xl mx-auto mb-10">
-            Discover curated reading circles and grow with like-minded readers.
-          </p>
 
           <div className="relative max-w-md mx-auto">
             <Search className="absolute left-3 top-3.5 w-5 h-5 text-muted-foreground" />
@@ -204,7 +262,7 @@ const ClubsPage: React.FC = () => {
       <section className="py-16 px-6">
         <div className="max-w-6xl mx-auto">
           <div className="flex items-center gap-2 mb-8">
-            <Sparkles className="w-5 h-5 text-primary" />
+            <Sparkles className="w-8 h-8 text-primary animate-pulse" />
             <h2 className="text-2xl font-semibold">Featured Clubs</h2>
           </div>
 
@@ -231,7 +289,7 @@ const ClubsPage: React.FC = () => {
       <section className="py-16 px-6 border-t">
         <div className="max-w-6xl mx-auto">
           <div className="flex items-center gap-2 mb-8">
-            <TrendingUp className="w-5 h-5 text-primary" />
+            <TrendingUp className="w-8 h-8 text-primary animate-pulse" />
             <h2 className="text-2xl font-semibold">Explore All Clubs</h2>
           </div>
 
