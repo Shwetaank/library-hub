@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 /**
  * Privacy & Terms Page
@@ -187,7 +187,7 @@ const SectionCard = React.memo(
             <div className="p-3 rounded-xl bg-linear-to-br from-primary/20 to-primary/5 text-primary transition-transform duration-300 group-hover:scale-110">
               <Icon className="w-5 h-5 animate-pulse" />
             </div>
-            <h3 className="text-lg font-bold tracking-tight bg-linear-to-r from-primary to-purple-500 bg-clip-text text-transparent hover:underline hover:underline-offset-2">
+            <h3 className="text-lg font-bold tracking-tight bg-linear-to-r from-primary to-purple-500 dark:from-sky-300 dark:to-cyan-400 bg-clip-text text-transparent hover:underline hover:underline-offset-2">
               {title}
             </h3>
           </div>
@@ -220,7 +220,7 @@ const PrivacyTermsPage: React.FC = () => {
 
   return (
     <main className="relative min-h-screen bg-linear-to-b from-background via-muted/20 to-background">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-24">
         {/* ------------------------------------------------------------------ */}
         {/* Hero Section                                                        */}
         {/* ------------------------------------------------------------------ */}
@@ -230,7 +230,7 @@ const PrivacyTermsPage: React.FC = () => {
             <Badge variant="outline">Version {LEGAL_META.version}</Badge>
           </div>
 
-          <h1 className="text-4xl sm:text-5xl font-bold tracking-tight leading-[1.2] pb-1 bg-linear-to-r from-primary to-purple-500 bg-clip-text text-transparent">
+          <h1 className="text-4xl sm:text-5xl font-bold tracking-tight leading-[1.2] pb-1 bg-linear-to-r from-primary to-purple-500 dark:from-sky-300 dark:to-cyan-400 bg-clip-text text-transparent">
             Privacy Policy & Terms
           </h1>
 
@@ -295,3 +295,5 @@ const PrivacyTermsPage: React.FC = () => {
 };
 
 export default PrivacyTermsPage;
+
+

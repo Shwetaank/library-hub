@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import React, { useMemo, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -85,16 +85,16 @@ const HelpCenterPage: React.FC = () => {
 
   return (
     <div className="relative min-h-screen bg-linear-to-b from-background via-muted/30 to-background overflow-hidden">
-      <div className="max-w-7xl mx-auto px-6 py-20">
+      <div className="container mx-auto px-6 py-20">
         {/* ================= HERO ================= */}
 
         <section className="text-center mb-24">
           <Badge className="mb-6 bg-primary/10 text-primary border-primary/20 animate-pulse">
             <ShieldCheck className="w-4 h-4 mr-2" />
-            99.9% Platform Uptime • 24h Support
+            99.9% Platform Uptime â€¢ 24h Support
           </Badge>
 
-          <h1 className="text-4xl pb-10 sm:text-6xl font-bold bg-linear-to-r from-primary to-purple-500 bg-clip-text text-transparent">
+          <h1 className="text-4xl pb-10 sm:text-6xl font-bold bg-linear-to-r from-primary to-purple-500 dark:from-sky-300 dark:to-cyan-400 bg-clip-text text-transparent">
             How can we help you today ?
           </h1>
 
@@ -132,7 +132,7 @@ const HelpCenterPage: React.FC = () => {
                   }}
                   className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition text-left ${
                     isActive
-                      ? "bg-linear-to-r from-primary to-purple-500 text-primary-foreground cursor-pointer shadow "
+                      ? "bg-linear-to-r from-primary to-purple-500 dark:from-sky-300 dark:to-cyan-400 text-primary-foreground dark:text-black cursor-pointer shadow "
                       : "hover:bg-muted cursor-pointer hover:shadow"
                   }`}
                 >
@@ -185,7 +185,7 @@ const HelpCenterPage: React.FC = () => {
 
         <section className="mt-28">
           <Card className="text-center p-14 rounded-3xl bg-linear-to-r from-primary/10 to-purple-500/10 border shadow-lg">
-            <h2 className="text-3xl font-bold mb-4 bg-linear-to-r from-primary to-purple-500 bg-clip-text text-transparent">
+            <h2 className="text-3xl font-bold mb-4 bg-linear-to-r from-primary to-purple-500 dark:from-sky-300 dark:to-cyan-400 bg-clip-text text-transparent">
               Still need help?
             </h2>
 
@@ -197,7 +197,7 @@ const HelpCenterPage: React.FC = () => {
             <Button
               size="lg"
               asChild
-              className="bg-linear-to-r from-primary to-purple-500 rounded-xl px-8"
+              className="bg-linear-to-r from-primary to-purple-500 dark:from-sky-300 dark:to-cyan-400 rounded-xl px-8"
             >
               <Link href="/contact">Contact Support</Link>
             </Button>
@@ -209,3 +209,5 @@ const HelpCenterPage: React.FC = () => {
 };
 
 export default HelpCenterPage;
+
+

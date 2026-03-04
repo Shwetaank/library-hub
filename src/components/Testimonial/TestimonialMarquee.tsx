@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import React, { useMemo } from "react";
 import { motion } from "framer-motion";
@@ -46,7 +46,7 @@ const TestimonialMarquee = () => {
               <CardContent className="p-6 flex flex-col justify-between h-full">
                 {/* Message */}
                 <p className="text-sm sm:text-base leading-relaxed text-muted-foreground line-clamp-4 text-justify">
-                  “{testimonial.message}”
+                  â€œ{testimonial.message}â€
                 </p>
 
                 {/* User Info */}
@@ -59,7 +59,7 @@ const TestimonialMarquee = () => {
                   </Avatar>
 
                   <div className="min-w-0">
-                    <p className="text-sm font-semibold truncate bg-linear-to-r from-primary to-purple-500 bg-clip-text text-transparent">
+                    <p className="text-sm font-semibold truncate bg-linear-to-r from-primary to-purple-500 dark:from-sky-300 dark:to-cyan-400 bg-clip-text text-transparent">
                       {testimonial.name}
                     </p>
                     <p className="text-xs text-muted-foreground truncate">
@@ -86,3 +86,4 @@ const TestimonialMarquee = () => {
 };
 
 export default TestimonialMarquee;
+

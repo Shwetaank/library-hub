@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import React, { useState, useMemo, useRef, useEffect } from "react";
 import { motion } from "framer-motion";
@@ -149,7 +149,7 @@ const ContactPage: React.FC = () => {
 
       setSubmitted(true);
 
-      /* 🎉 Smooth Multi-Burst Confetti */
+      /* ðŸŽ‰ Smooth Multi-Burst Confetti */
       const duration = 1400;
       const end = Date.now() + duration;
 
@@ -202,7 +202,7 @@ const ContactPage: React.FC = () => {
 
   return (
     <section className="relative overflow-hidden py-20 bg-linear-to-b from-background via-muted/20 to-background">
-      <div className="max-w-7xl mx-auto px-6 lg:grid lg:grid-cols-2 gap-20">
+      <div className="container mx-auto px-6 lg:grid lg:grid-cols-2 gap-20">
         {/* LEFT */}
         <motion.div
           initial={{ opacity: 0, y: 25 }}
@@ -215,7 +215,7 @@ const ContactPage: React.FC = () => {
             Trusted by 120+ Institutions
           </Badge>
 
-          <h1 className="text-4xl sm:text-5xl font-bold tracking-tight leading-\[1.4] pb-1 bg-linear-to-r from-primary to-purple-500 bg-clip-text text-transparent">
+          <h1 className="text-4xl sm:text-5xl font-bold tracking-tight leading-\[1.4] pb-1 bg-linear-to-r from-primary to-purple-500 dark:from-sky-300 dark:to-cyan-400 bg-clip-text text-transparent">
             Custmize Your Library
           </h1>
 
@@ -243,7 +243,7 @@ const ContactPage: React.FC = () => {
                 <CheckCircle2 className="w-14 h-14 text-green-500 mx-auto" />
 
                 <h3 className="text-2xl font-semibold">
-                  You&apos;re All Set 🎉
+                  You&apos;re All Set ðŸŽ‰
                 </h3>
 
                 <p className="text-muted-foreground ">
@@ -260,7 +260,7 @@ const ContactPage: React.FC = () => {
                   variant="outline"
                   size="lg"
                   onClick={resetForm}
-                  className="bg-linear-to-r from-primary to-purple-500 text-white"
+                  className="bg-linear-to-r from-primary to-purple-500 dark:from-sky-300 dark:to-cyan-400 text-white dark:text-black"
                 >
                   Submit Another Request
                 </Button>
@@ -268,7 +268,7 @@ const ContactPage: React.FC = () => {
             ) : (
               <>
                 <CardHeader className="px-0">
-                  <CardTitle className="text-3xl text-center font-bold bg-linear-to-r from-primary to-purple-500 bg-clip-text text-transparent">
+                  <CardTitle className="text-3xl text-center font-bold bg-linear-to-r from-primary to-purple-500 dark:from-sky-300 dark:to-cyan-400 bg-clip-text text-transparent">
                     Schedule Your Free Demo
                   </CardTitle>
                   <CardDescription>Takes less than 30 seconds.</CardDescription>
@@ -326,7 +326,7 @@ const ContactPage: React.FC = () => {
                     <Button
                       type="submit"
                       disabled={!isValid || loading}
-                      className="w-full h-12 bg-linear-to-r from-primary to-purple-500 disabled:opacity-60 animate-pulse cursor-pointer"
+                      className="w-full h-12 bg-linear-to-r from-primary to-purple-500 dark:from-sky-300 dark:to-cyan-400 disabled:opacity-60 animate-pulse cursor-pointer"
                     >
                       {loading ? (
                         <>
@@ -354,3 +354,5 @@ const ContactPage: React.FC = () => {
 };
 
 export default ContactPage;
+
+

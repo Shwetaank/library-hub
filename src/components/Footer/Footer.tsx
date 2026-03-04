@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import React, { useState } from "react";
 import Link from "next/link";
@@ -55,7 +55,7 @@ const Footer: React.FC = () => {
 
       if (!res.ok) throw new Error("Failed");
 
-      toast.success("Subscribed successfully 🎉");
+      toast.success("Subscribed successfully \u{1F389}");
       setEmail("");
     } catch {
       toast.error("Subscription failed");
@@ -98,7 +98,7 @@ const Footer: React.FC = () => {
           <div className="lg:col-span-2 space-y-6 text-center lg:text-left cursor-pointer">
             <div className="flex items-center justify-center lg:justify-start gap-3">
               <BookOpen className="h-10 w-10 text-primary animate-pulse" />
-              <h2 className="text-4xl font-bold pb-1 bg-linear-to-r from-primary to-purple-500 bg-clip-text text-transparent">
+              <h2 className="text-4xl font-bold pb-1 bg-linear-to-r from-primary to-purple-500 dark:from-sky-300 dark:to-cyan-400 bg-clip-text text-transparent">
                 LibraryHub
               </h2>
 
@@ -197,7 +197,7 @@ const Footer: React.FC = () => {
                 <Button
                   onClick={handleSubscribe}
                   disabled={loading}
-                  className="cursor-pointer bg-linear-to-r from-primary to-purple-500 text-white hover:opacity-90 transition"
+                  className="cursor-pointer bg-linear-to-r from-primary to-purple-500 dark:from-sky-300 dark:to-cyan-400 text-white dark:text-black hover:opacity-90 transition"
                 >
                   {loading ? (
                     <span className="animate-spin h-4 w-4 border-2 border-white border-t-transparent rounded-full inline-block" />
@@ -227,9 +227,9 @@ const Footer: React.FC = () => {
           </div>
 
           <p>
-            © {new Date().getFullYear()}
+            {"\u00A9"} {new Date().getFullYear()}
             <span
-              className="mx-1 font-semibold bg-linear-to-r from-primary to-purple-500 bg-clip-text text-transparent cursor-pointer hover:underline"
+              className="mx-1 font-semibold bg-linear-to-r from-primary to-purple-500 dark:from-sky-300 dark:to-cyan-400 bg-clip-text text-transparent cursor-pointer hover:underline"
               onClick={() =>
                 window.open("https://libraryhub.vercel.app", "_blank")
               }
@@ -248,7 +248,7 @@ const Footer: React.FC = () => {
             rel="noopener noreferrer"
             className="font-bold hover:text-primary transition-colors"
           >
-            Sin_Greed_❤️
+            {"Sin_Greed_\u2764\uFE0F"}
           </a>
         </div>
       </div>

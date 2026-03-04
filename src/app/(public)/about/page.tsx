@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import React from "react";
 import { motion, Variants } from "framer-motion";
@@ -68,7 +68,7 @@ const AboutPage: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-linear-to-b from-background via-muted/20 to-background">
-      <section className="mx-auto max-w-7xl px-6 sm:px-10 lg:px-16 py-20">
+      <section className="container mx-auto px-6 sm:px-10 lg:px-16 py-20">
         {/* ================= HERO ================= */}
         <motion.div
           initial="hidden"
@@ -76,7 +76,7 @@ const AboutPage: React.FC = () => {
           variants={fadeUp}
           className="text-center mb-20"
         >
-          <h1 className="text-4xl pb-10 sm:text-6xl font-bold bg-linear-to-r from-primary to-purple-500 bg-clip-text text-transparent">
+          <h1 className="text-4xl pb-10 sm:text-6xl font-bold bg-linear-to-r from-primary to-purple-500 dark:from-sky-300 dark:to-cyan-400 bg-clip-text text-transparent">
             About LibraryHub
           </h1>
 
@@ -96,7 +96,7 @@ const AboutPage: React.FC = () => {
           viewport={{ once: true }}
           className="rounded-3xl border bg-background/70 backdrop-blur-md p-8 sm:p-14 mb-24 shadow-sm"
         >
-          <h2 className="text-3xl sm:text-4xl font-semibold text-center bg-linear-to-r from-primary to-purple-500 bg-clip-text text-transparent  mb-6">
+          <h2 className="text-3xl sm:text-4xl font-semibold text-center bg-linear-to-r from-primary to-purple-500 dark:from-sky-300 dark:to-cyan-400 bg-clip-text text-transparent  mb-6">
             Our Mission
           </h2>
 
@@ -147,7 +147,7 @@ const AboutPage: React.FC = () => {
               >
                 {stat.data.direction === "up" ? "+" : ""}
                 {stat.data.percentage}%{" "}
-                {stat.data.direction === "up" ? "↑" : "↓"}
+                {stat.data.direction === "up" ? "â†‘" : "â†“"}
               </div>
 
               <p className="mt-3 text-lg text-foreground/70">{stat.label}</p>
@@ -172,7 +172,7 @@ const AboutPage: React.FC = () => {
                   <div className="flex justify-center mb-6">
                     <Icon className="h-10 w-10 animate-pulse " />
                   </div>
-                  <h3 className="text-xl font-semibold mb-4 text-center bg-linear-to-r from-primary to-purple-500 bg-clip-text text-transparent">
+                  <h3 className="text-xl font-semibold mb-4 text-center bg-linear-to-r from-primary to-purple-500 dark:from-sky-300 dark:to-cyan-400 bg-clip-text text-transparent">
                     {value.title}
                   </h3>
                   <p className="text-sm sm:text-base text-foreground/70 leading-relaxed text-center">
@@ -192,7 +192,7 @@ const AboutPage: React.FC = () => {
           viewport={{ once: true }}
           className="rounded-3xl border bg-linear-to-r from-primary/10 to-indigo-500/10 p-10 sm:p-16 text-center backdrop-blur-md"
         >
-          <h2 className="text-3xl sm:text-4xl font-semibold mb-6 leading-tight bg-linear-to-r from-primary to-purple-500 bg-clip-text text-transparent">
+          <h2 className="text-3xl sm:text-4xl font-semibold mb-6 leading-tight bg-linear-to-r from-primary to-purple-500 dark:from-sky-300 dark:to-cyan-400 bg-clip-text text-transparent">
             Start Exploring Today
           </h2>
 
@@ -206,13 +206,13 @@ const AboutPage: React.FC = () => {
             <Button
               asChild
               size="lg"
-              className="bg-linear-to-r from-primary to-purple-500 hover:opacity-90"
+              className="bg-linear-to-r from-primary to-purple-500 dark:from-sky-300 dark:to-cyan-400 hover:opacity-90"
             >
               <Link href="/books">Explore Books</Link>
             </Button>
 
             <div className="w-full sm:w-auto">
-              <div className="w-full sm:w-auto rounded-xl bg-linear-to-r from-primary to-purple-500 p-0.5">
+              <div className="w-full sm:w-auto rounded-xl bg-linear-to-r from-primary to-purple-500 dark:from-sky-300 dark:to-cyan-400 p-0.5">
                 <Button
                   asChild
                   size="lg"
@@ -232,3 +232,4 @@ const AboutPage: React.FC = () => {
 };
 
 export default AboutPage;
+

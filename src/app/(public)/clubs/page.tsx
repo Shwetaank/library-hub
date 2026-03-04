@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import React, {
   useMemo,
@@ -111,7 +111,7 @@ const ClubCard = React.memo(({ club, isJoined, onToggle }: ClubCardProps) => {
         </div>
 
         <div className="p-5 flex flex-col flex-1">
-          <h3 className="font-semibold  bg-linear-to-r from-primary to-purple-500 bg-clip-text text-transparent text-lg  mb-2">
+          <h3 className="font-semibold  bg-linear-to-r from-primary to-purple-500 dark:from-sky-300 dark:to-cyan-400 bg-clip-text text-transparent text-lg  mb-2">
             {club.name}
           </h3>
 
@@ -162,9 +162,9 @@ const ClubCard = React.memo(({ club, isJoined, onToggle }: ClubCardProps) => {
             <Button
               onClick={() => onToggle(club.id)}
               variant={isJoined ? "default" : "outline"}
-              className="w-full mt-auto rounded-2xl text-white  bg-linear-to-r from-primary to-purple-500 cursor-pointer "
+              className="w-full mt-auto rounded-2xl text-white dark:text-black  bg-linear-to-r from-primary to-purple-500 dark:from-sky-300 dark:to-cyan-400 cursor-pointer "
             >
-              {isJoined ? "Joined ✓" : "Join Club"}
+              {isJoined ? "Joined âœ“" : "Join Club"}
             </Button>
           </motion.div>
         </div>
@@ -209,7 +209,7 @@ const ClubsPage: React.FC = () => {
 
     let newJoined: string[];
     if (isJoining) {
-      toast.success("Successfully joined the club 🎉");
+      toast.success("Successfully joined the club ðŸŽ‰");
       newJoined = [...currentJoined, id];
     } else {
       toast.info("You left the club");
@@ -240,9 +240,9 @@ const ClubsPage: React.FC = () => {
           initial="hidden"
           animate="show"
           variants={fadeUp}
-          className="max-w-5xl mx-auto text-center"
+          className="w-max-7xl mx-auto text-center"
         >
-          <h1 className="text-4xl pb-10 sm:text-6xl font-bold bg-linear-to-r from-primary to-purple-500 bg-clip-text text-transparent">
+          <h1 className="text-4xl pb-10 sm:text-6xl font-bold bg-linear-to-r from-primary to-purple-500 dark:from-sky-300 dark:to-cyan-400 bg-clip-text text-transparent">
             Community Driven Reading Experience
           </h1>
 
@@ -260,7 +260,7 @@ const ClubsPage: React.FC = () => {
 
       {/* FEATURED */}
       <section className="py-16 px-6">
-        <div className="max-w-6xl mx-auto">
+        <div className="container mx-auto">
           <div className="flex items-center gap-2 mb-8">
             <Sparkles className="w-8 h-8 text-primary animate-pulse" />
             <h2 className="text-2xl font-semibold">Featured Clubs</h2>
@@ -287,7 +287,7 @@ const ClubsPage: React.FC = () => {
 
       {/* ALL CLUBS */}
       <section className="py-16 px-6 border-t">
-        <div className="max-w-6xl mx-auto">
+        <div className="container mx-auto">
           <div className="flex items-center gap-2 mb-8">
             <TrendingUp className="w-8 h-8 text-primary animate-pulse" />
             <h2 className="text-2xl font-semibold">Explore All Clubs</h2>
