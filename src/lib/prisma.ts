@@ -1,4 +1,4 @@
-import { PrismaClient } from "@/generated/prisma";
+import { PrismaClient } from "../generated/prisma";
 import { PrismaMssql } from "@prisma/adapter-mssql";
 
 const globalForPrisma = globalThis as unknown as {
