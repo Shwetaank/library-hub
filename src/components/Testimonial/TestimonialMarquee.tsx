@@ -46,7 +46,7 @@ const TestimonialMarquee = () => {
               <CardContent className="p-6 flex flex-col justify-between h-full">
                 {/* Message */}
                 <p className="text-sm sm:text-base leading-relaxed text-muted-foreground line-clamp-4 text-justify">
-                  â€œ{testimonial.message}â€
+                  "{testimonial.message}"
                 </p>
 
                 {/* User Info */}
