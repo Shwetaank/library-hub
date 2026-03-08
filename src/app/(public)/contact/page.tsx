@@ -1,8 +1,8 @@
 ﻿"use client";
 
 import React, { useState, useMemo, useRef, useEffect } from "react";
+import dynamic from "next/dynamic";
 import { motion } from "framer-motion";
-import confetti from "canvas-confetti";
 import {
   Card,
   CardContent,
@@ -15,7 +15,13 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Sparkles, Loader2, ShieldCheck, CheckCircle2 } from "lucide-react";
-import TestimonialSlider from "@/components/Testimonial/TestimonialMarquee";
+
+const TestimonialSlider = dynamic(
+  () => import("@/components/Testimonial/TestimonialMarquee"),
+  {
+    loading: () => <div className="h-[360px] w-full rounded-3xl bg-muted/30" />,
+  },
+);
 
 /* ---------------- TYPES ---------------- */
 
@@ -149,7 +155,8 @@ const ContactPage: React.FC = () => {
 
       setSubmitted(true);
 
-      /* ðŸŽ‰ Smooth Multi-Burst Confetti */
+      /* Smooth multi-burst confetti */
+      const { default: confetti } = await import("canvas-confetti");
       const duration = 1400;
       const end = Date.now() + duration;
 
@@ -243,7 +250,7 @@ const ContactPage: React.FC = () => {
                 <CheckCircle2 className="w-14 h-14 text-green-500 mx-auto" />
 
                 <h3 className="text-2xl font-semibold">
-                  You&apos;re All Set ðŸŽ‰
+                  You&apos;re All Set {"\u{1F389}"}
                 </h3>
 
                 <p className="text-muted-foreground ">

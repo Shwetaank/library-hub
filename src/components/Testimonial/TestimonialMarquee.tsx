@@ -37,16 +37,15 @@ const TestimonialMarquee = () => {
           >
             <Card
               className={cn(
-                "h-65 rounded-3xl border border-border/40",
+                "ui-card-elevated h-65 rounded-3xl border-border/40",
                 "bg-linear-to-br from-primary/10 to-purple-500/10",
-                "backdrop-blur-xl shadow-lg hover:shadow-2xl",
                 "transition-all duration-300 flex flex-col justify-between",
               )}
             >
               <CardContent className="p-6 flex flex-col justify-between h-full">
                 {/* Message */}
                 <p className="text-sm sm:text-base leading-relaxed text-muted-foreground line-clamp-4 text-justify">
-                  "{testimonial.message}"
+                  &ldquo;{testimonial.message}&rdquo;
                 </p>
 
                 {/* User Info */}

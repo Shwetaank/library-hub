@@ -86,92 +86,95 @@ interface ClubCardProps {
   club: Club;
   isJoined: boolean;
   onToggle: (id: string) => void;
+  priorityImage?: boolean;
 }
 
-const ClubCard = React.memo(({ club, isJoined, onToggle }: ClubCardProps) => {
-  return (
-    <motion.div
-      variants={fadeUp}
-      layout
-      whileHover={{ y: -6 }}
-      transition={{ type: "spring", stiffness: 220, damping: 18 }}
-    >
-      <Card className="rounded-2xl border border-border/60 bg-background shadow-sm hover:shadow-xl transition-all flex flex-col overflow-hidden group">
-        {/* IMAGE */}
-        <div className="relative h-44 w-full overflow-hidden">
-          <Image
-            src={club.image}
-            alt={club.name}
-            fill
-            className="object-cover group-hover:scale-105 transition-transform duration-500"
-            sizes="(max-width: 768px) 100vw, 33vw"
-            loading="eager"
-          />
-          <div className="absolute inset-0 bg-linear-to-t from-black/50 to-transparent" />
-        </div>
+const ClubCard = React.memo(
+  ({ club, isJoined, onToggle, priorityImage = false }: ClubCardProps) => {
+    return (
+      <motion.div
+        variants={fadeUp}
+        layout
+        whileHover={{ y: -6 }}
+        transition={{ type: "spring", stiffness: 220, damping: 18 }}
+      >
+        <Card className="ui-card-elevated rounded-2xl flex flex-col overflow-hidden group">
+          {/* IMAGE */}
+          <div className="relative h-44 w-full overflow-hidden">
+            <Image
+              src={club.image}
+              alt={club.name}
+              fill
+              className="object-cover group-hover:scale-105 transition-transform duration-500"
+              sizes="(max-width: 768px) 100vw, 33vw"
+              priority={priorityImage}
+            />
+            <div className="absolute inset-0 bg-linear-to-t from-black/50 to-transparent" />
+          </div>
 
-        <div className="p-5 flex flex-col flex-1">
-          <h3 className="font-semibold  bg-linear-to-r from-primary to-purple-500 dark:from-sky-300 dark:to-cyan-400 bg-clip-text text-transparent text-lg  mb-2">
-            {club.name}
-          </h3>
+          <div className="p-5 flex flex-col flex-1">
+            <h3 className="font-semibold  bg-linear-to-r from-primary to-purple-500 dark:from-sky-300 dark:to-cyan-400 bg-clip-text text-transparent text-lg  mb-2">
+              {club.name}
+            </h3>
 
-          {/* TAGS */}
-          <div className="flex flex-wrap gap-2 mb-3">
-            <span
-              className={`text-xs px-3 py-1 rounded-full border capitalize font-medium ${
-                categoryColors[club.category] ??
-                "bg-muted text-muted-foreground border"
-              }`}
-            >
-              {club.category}
-            </span>
-
-            {club.privacy === "private" && (
-              <span className="flex items-center gap-1 text-xs bg-muted px-3 py-1 rounded-full border">
-                <Lock className="w-3 h-3" />
-                Private
+            {/* TAGS */}
+            <div className="flex flex-wrap gap-2 mb-3">
+              <span
+                className={`text-xs px-3 py-1 rounded-full border capitalize font-medium ${
+                  categoryColors[club.category] ??
+                  "bg-muted text-muted-foreground border"
+                }`}
+              >
+                {club.category}
               </span>
-            )}
-          </div>
 
-          <p className="text-sm text-muted-foreground text-justify line-clamp-2 mb-4">
-            {club.description}
-          </p>
-
-          {/* CURRENT BOOK */}
-          <div className="bg-muted/40 rounded-lg p-3 mb-4 text-md">
-            <p className="font-medium">{club.currentBook.title}</p>
-            <p className="text-muted-foreground">{club.currentBook.author}</p>
-          </div>
-
-          {/* META */}
-          <div className="flex items-center justify-between text-sm mb-4">
-            <div className="flex items-center gap-1">
-              <Users className="w-4 h-4 text-primary" />
-              {club.members.toLocaleString()}
+              {club.privacy === "private" && (
+                <span className="flex items-center gap-1 text-xs bg-muted px-3 py-1 rounded-full border">
+                  <Lock className="w-3 h-3" />
+                  Private
+                </span>
+              )}
             </div>
 
-            <div className="flex items-center gap-2 text-muted-foreground text-xs">
-              <Calendar className="w-4 h-4 animate-pulse" />
-              {formatDate(club.currentBook.discussionDate)}
-            </div>
-          </div>
+            <p className="text-sm text-muted-foreground text-justify line-clamp-2 mb-4">
+              {club.description}
+            </p>
 
-          {/* JOIN BUTTON */}
-          <motion.div whileTap={{ scale: 0.95 }}>
-            <Button
-              onClick={() => onToggle(club.id)}
-              variant={isJoined ? "default" : "outline"}
-              className="w-full mt-auto rounded-2xl text-white dark:text-black  bg-linear-to-r from-primary to-purple-500 dark:from-sky-300 dark:to-cyan-400 cursor-pointer "
-            >
-              {isJoined ? "Joined âœ“" : "Join Club"}
-            </Button>
-          </motion.div>
-        </div>
-      </Card>
-    </motion.div>
-  );
-});
+            {/* CURRENT BOOK */}
+            <div className="bg-muted/40 rounded-lg p-3 mb-4 text-md">
+              <p className="font-medium">{club.currentBook.title}</p>
+              <p className="text-muted-foreground">{club.currentBook.author}</p>
+            </div>
+
+            {/* META */}
+            <div className="flex items-center justify-between text-sm mb-4">
+              <div className="flex items-center gap-1">
+                <Users className="w-4 h-4 text-primary" />
+                {club.members.toLocaleString()}
+              </div>
+
+              <div className="flex items-center gap-2 text-muted-foreground text-xs">
+                <Calendar className="w-4 h-4 animate-pulse" />
+                {formatDate(club.currentBook.discussionDate)}
+              </div>
+            </div>
+
+            {/* JOIN BUTTON */}
+            <motion.div whileTap={{ scale: 0.95 }}>
+              <Button
+                onClick={() => onToggle(club.id)}
+                variant={isJoined ? "default" : "outline"}
+                className="w-full mt-auto rounded-2xl text-white dark:text-black  bg-linear-to-r from-primary to-purple-500 dark:from-sky-300 dark:to-cyan-400 cursor-pointer "
+              >
+                {isJoined ? "Joined \u2713" : "Join Club"}
+              </Button>
+            </motion.div>
+          </div>
+        </Card>
+      </motion.div>
+    );
+  },
+);
 
 ClubCard.displayName = "ClubCard";
 
@@ -189,6 +192,7 @@ const ClubsPage: React.FC = () => {
     () => "[]",
   );
   const joined: string[] = useMemo(() => JSON.parse(joinedJSON), [joinedJSON]);
+  const joinedSet = useMemo(() => new Set(joined), [joined]);
 
   const toggleJoin = useCallback((id: string) => {
     const currentJoined: string[] = JSON.parse(joinedClubsStore.get());
@@ -209,7 +213,7 @@ const ClubsPage: React.FC = () => {
 
     let newJoined: string[];
     if (isJoining) {
-      toast.success("Successfully joined the club ðŸŽ‰");
+      toast.success("Successfully joined the club \u{1F389}");
       newJoined = [...currentJoined, id];
     } else {
       toast.info("You left the club");
@@ -235,24 +239,24 @@ const ClubsPage: React.FC = () => {
   return (
     <div className="min-h-screen bg-background">
       {/* HERO */}
-      <section className="py-20 px-6 border-b bg-linear-to-br from-primary/5 via-background to-blue-500/5">
+      <section className="px-6 pt-12 pb-8">
         <motion.div
           initial="hidden"
           animate="show"
           variants={fadeUp}
-          className="w-max-7xl mx-auto text-center"
+          className="hero-shell w-full max-w-6xl mx-auto text-center"
         >
-          <h1 className="text-4xl pb-10 sm:text-6xl font-bold bg-linear-to-r from-primary to-purple-500 dark:from-sky-300 dark:to-cyan-400 bg-clip-text text-transparent">
+          <h1 className="hero-title pb-8">
             Community Driven Reading Experience
           </h1>
 
-          <div className="relative max-w-md mx-auto">
+          <div className="relative max-w-xl mx-auto">
             <Search className="absolute left-3 top-3.5 w-5 h-5 text-muted-foreground" />
             <Input
               placeholder="Search clubs..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="pl-10 h-11 rounded-xl shadow-sm"
+              className="pl-10 h-12 rounded-xl shadow-sm"
             />
           </div>
         </motion.div>
@@ -277,8 +281,9 @@ const ClubsPage: React.FC = () => {
               <ClubCard
                 key={club.id}
                 club={club}
-                isJoined={joined.includes(club.id)}
+                isJoined={joinedSet.has(club.id)}
                 onToggle={toggleJoin}
+                priorityImage
               />
             ))}
           </motion.div>
@@ -310,7 +315,7 @@ const ClubsPage: React.FC = () => {
                   <ClubCard
                     key={club.id}
                     club={club}
-                    isJoined={joined.includes(club.id)}
+                    isJoined={joinedSet.has(club.id)}
                     onToggle={toggleJoin}
                   />
                 ))}

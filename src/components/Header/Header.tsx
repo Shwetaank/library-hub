@@ -336,7 +336,7 @@ const Header: React.FC = () => {
             <button
               onClick={openMobile}
               aria-label="Open navigation menu"
-              className="justify-self-end md:hidden p-2 rounded-lg hover:bg-muted transition"
+              className="justify-self-end md:hidden p-3 rounded-lg hover:bg-muted transition"
             >
               <Menu />
             </button>
@@ -379,7 +379,7 @@ const Header: React.FC = () => {
                 <button
                   onClick={closeMobile}
                   aria-label="Close navigation menu"
-                  className="p-2 rounded-md hover:bg-muted transition"
+                  className="p-3 rounded-md hover:bg-muted transition"
                 >
                   <X />
                 </button>
@@ -422,13 +422,24 @@ const Header: React.FC = () => {
                   >
                     <Link
                       href={item.href}
-                      className={`block px-4 py-3 rounded-xl text-sm font-medium transition ${
+                      className={`relative block px-4 py-3.5 rounded-xl text-sm font-medium transition ${
                         isActive(item.href)
                           ? "bg-primary/10 text-primary"
                           : "hover:bg-muted text-muted-foreground hover:text-foreground"
                       }`}
                     >
                       {item.label}
+                      {isActive(item.href) ? (
+                        <motion.span
+                          layoutId="mobile-active-link"
+                          className="absolute bottom-1 left-4 right-4 h-0.5 rounded-full bg-primary/80"
+                          transition={{
+                            type: "spring",
+                            stiffness: 420,
+                            damping: 34,
+                          }}
+                        />
+                      ) : null}
                     </Link>
                   </motion.div>
                 ))}

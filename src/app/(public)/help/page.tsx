@@ -88,17 +88,17 @@ const HelpCenterPage: React.FC = () => {
       <div className="container mx-auto px-6 py-20">
         {/* ================= HERO ================= */}
 
-        <section className="text-center mb-24">
+        <section className="hero-shell text-center mb-16">
           <Badge className="mb-6 bg-primary/10 text-primary border-primary/20 animate-pulse">
             <ShieldCheck className="w-4 h-4 mr-2" />
-            99.9% Platform Uptime â€¢ 24h Support
+            99.9% Platform Uptime {"\u2022"} 24h Support
           </Badge>
 
-          <h1 className="text-4xl pb-10 sm:text-6xl font-bold bg-linear-to-r from-primary to-purple-500 dark:from-sky-300 dark:to-cyan-400 bg-clip-text text-transparent">
+          <h1 className="hero-title pb-8">
             How can we help you today ?
           </h1>
 
-          <p className="text-muted-foreground mx-auto mb-10 text-lg">
+          <p className="hero-copy mb-8">
             Search across our knowledge base to find guides, tutorials, and
             troubleshooting resources instantly.
           </p>
@@ -145,7 +145,7 @@ const HelpCenterPage: React.FC = () => {
 
           {/* Articles */}
           <div className="lg:col-span-3">
-            <Card className="p-10 rounded-3xl backdrop-blur border border-border/60 shadow-xl">
+            <Card className="ui-card-elevated p-8 sm:p-10 rounded-3xl">
               <h2 className="text-2xl font-bold mb-8 flex items-center cursor-pointer underline underline-offset-3  gap-6">
                 <Star className="w-10 h-10 text-yellow-600 animate-pulse " />
                 Articles
@@ -163,7 +163,7 @@ const HelpCenterPage: React.FC = () => {
                   {filteredArticles.map((article) => (
                     <li
                       key={article.title}
-                      className="group flex justify-between items-center p-5 rounded-2xl border border-border/50 hover:bg-muted/50 hover:shadow-md transition cursor-pointer"
+                      className="group flex justify-between items-center p-5 rounded-2xl border border-border/50 hover:bg-muted/50 transition cursor-pointer"
                     >
                       <span className="font-medium">{article.title}</span>
                       <ArrowRight className="w-4 h-4 opacity-50 group-hover:translate-x-1 transition" />
@@ -184,7 +184,7 @@ const HelpCenterPage: React.FC = () => {
         {/* ================= CTA ================= */}
 
         <section className="mt-28">
-          <Card className="text-center p-14 rounded-3xl bg-linear-to-r from-primary/10 to-purple-500/10 border shadow-lg">
+          <Card className="ui-card-elevated text-center p-10 sm:p-14 rounded-3xl bg-linear-to-r from-primary/10 to-purple-500/10">
             <h2 className="text-3xl font-bold mb-4 bg-linear-to-r from-primary to-purple-500 dark:from-sky-300 dark:to-cyan-400 bg-clip-text text-transparent">
               Still need help?
             </h2>

@@ -74,13 +74,13 @@ const AboutPage: React.FC = () => {
           initial="hidden"
           animate="visible"
           variants={fadeUp}
-          className="text-center mb-20"
+          className="hero-shell text-center mb-16"
         >
-          <h1 className="text-4xl pb-10 sm:text-6xl font-bold bg-linear-to-r from-primary to-purple-500 dark:from-sky-300 dark:to-cyan-400 bg-clip-text text-transparent">
+          <h1 className="hero-title pb-8">
             About LibraryHub
           </h1>
 
-          <p className="mt-6 text-lg sm:text-xl text-foreground/80 mx-auto leading-relaxed text-justify">
+          <p className="hero-copy text-center">
             LibraryHub is a modern Library Management System designed to help
             users explore books, check availability in real time, borrow titles,
             and manage their reading journey through a simple and intuitive
@@ -94,7 +94,7 @@ const AboutPage: React.FC = () => {
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true }}
-          className="rounded-3xl border bg-background/70 backdrop-blur-md p-8 sm:p-14 mb-24 shadow-sm"
+          className="ui-card-elevated rounded-3xl p-8 sm:p-14 mb-24"
         >
           <h2 className="text-3xl sm:text-4xl font-semibold text-center bg-linear-to-r from-primary to-purple-500 dark:from-sky-300 dark:to-cyan-400 bg-clip-text text-transparent  mb-6">
             Our Mission
@@ -147,7 +147,7 @@ const AboutPage: React.FC = () => {
               >
                 {stat.data.direction === "up" ? "+" : ""}
                 {stat.data.percentage}%{" "}
-                {stat.data.direction === "up" ? "â†‘" : "â†“"}
+                {stat.data.direction === "up" ? "\u2191" : "\u2193"}
               </div>
 
               <p className="mt-3 text-lg text-foreground/70">{stat.label}</p>
@@ -168,7 +168,7 @@ const AboutPage: React.FC = () => {
 
             return (
               <motion.div key={index} variants={fadeUp} className="h-full">
-                <Card className="h-full flex flex-col p-8 rounded-2xl border cursor-pointer bg-background/60 backdrop-blur-md hover:shadow-xl transition-all duration-300">
+                <Card className="ui-card-elevated h-full flex flex-col p-8 rounded-2xl cursor-pointer">
                   <div className="flex justify-center mb-6">
                     <Icon className="h-10 w-10 animate-pulse " />
                   </div>
@@ -190,7 +190,7 @@ const AboutPage: React.FC = () => {
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true }}
-          className="rounded-3xl border bg-linear-to-r from-primary/10 to-indigo-500/10 p-10 sm:p-16 text-center backdrop-blur-md"
+          className="ui-card-elevated rounded-3xl bg-linear-to-r from-primary/10 to-indigo-500/10 p-10 sm:p-16 text-center"
         >
           <h2 className="text-3xl sm:text-4xl font-semibold mb-6 leading-tight bg-linear-to-r from-primary to-purple-500 dark:from-sky-300 dark:to-cyan-400 bg-clip-text text-transparent">
             Start Exploring Today
