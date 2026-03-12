@@ -48,10 +48,15 @@ export const handleRegister = async (req: Request) => {
     const validated = registerSchema.safeParse(body);
 
     if (!validated.success) {
-      // Format validation errors using Zod v4 tree structure
-      const formattedErrors = z.treeifyError(validated.error);
+      const formattedErrors = z.flattenError(validated.error);
 
-      return Response.json({ errors: formattedErrors }, { status: 400 });
+      return Response.json(
+        {
+          message: "Please correct the highlighted fields.",
+          fieldErrors: formattedErrors.fieldErrors,
+        },
+        { status: 400 },
+      );
     }
 
     // Step 3: Call service layer to create user
@@ -68,7 +73,8 @@ export const handleRegister = async (req: Request) => {
      * (DB failures, environment misconfigurations, etc.)
      */
     if (error instanceof Error) {
-      return Response.json({ message: error.message }, { status: 500 });
+      const status = error.message === "User already exists" ? 409 : 500;
+      return Response.json({ message: error.message }, { status });
     }
 
     return Response.json({ message: "Internal Server Error" }, { status: 500 });
@@ -103,9 +109,15 @@ export const handleLogin = async (req: Request) => {
     const validated = loginSchema.safeParse(body);
 
     if (!validated.success) {
-      const formattedErrors = z.treeifyError(validated.error);
+      const formattedErrors = z.flattenError(validated.error);
 
-      return Response.json({ errors: formattedErrors }, { status: 400 });
+      return Response.json(
+        {
+          message: "Please correct the highlighted fields.",
+          fieldErrors: formattedErrors.fieldErrors,
+        },
+        { status: 400 },
+      );
     }
 
     // Step 3: Authenticate user & generate JWT

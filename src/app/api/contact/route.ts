@@ -67,7 +67,7 @@ style="background:#ffffff;border-radius:16px;overflow:hidden;
 box-shadow:0 10px 35px rgba(0,0,0,0.08);">
 
 <tr>
-<td style="background:linear-gradient(90deg,#6366f1,#8b5cf6);
+<td style="background:linear-gradient(90deg,#6D28D9,#EC4899);
 padding:30px 40px;text-align:center;">
 <h2 style="margin:0;color:#ffffff;">📚 New Demo Request</h2>
 <p style="margin:8px 0 0;color:#e0e7ff;font-size:14px;">
@@ -135,7 +135,7 @@ style="background:#ffffff;border-radius:16px;
 box-shadow:0 10px 35px rgba(0,0,0,0.08);overflow:hidden;">
 
 <tr>
-<td style="background:linear-gradient(90deg,#6366f1,#8b5cf6);
+<td style="background:linear-gradient(90deg,#6D28D9,#EC4899);
 padding:30px 40px;text-align:center;">
 <h2 style="margin:0;color:#ffffff;">You’re All Set 🎉</h2>
 </td>
@@ -158,7 +158,7 @@ Our team will contact you within 24 hours.
 <div style="text-align:center;margin-top:20px;">
 <span style="display:inline-block;
 padding:12px 24px;
-background:#111827;
+background:#6D28D9;
 color:#ffffff;
 border-radius:10px;
 font-size:14px;">

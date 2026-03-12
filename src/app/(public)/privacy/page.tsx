@@ -1,73 +1,41 @@
-﻿"use client";
+"use client";
 
-/**
- * Privacy & Terms Page
- * ----------------------------------------------------
- * Displays Privacy Policy and Terms of Service content
- * with animated section cards and tab switching.
- *
- * Features:
- * - Dynamic version (env-based)
- * - Dynamic last updated date
- * - Animated transitions (Framer Motion)
- * - Equal-height responsive cards
- * - Modern gradient typography
- */
-
-import React, { useState, useMemo } from "react";
+import React, { useMemo, useState } from "react";
 import { motion, AnimatePresence, Variants } from "framer-motion";
-import { Card, CardContent } from "@/components/ui/card";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Badge } from "@/components/ui/badge";
+import Link from "next/link";
 import {
-  ShieldCheck,
-  Lock,
+  AlertTriangle,
+  ArrowRight,
   Database,
   FileText,
-  Scale,
-  AlertTriangle,
-  UserCheck,
+  Library,
+  Lock,
   RefreshCw,
-  LucideIcon,
+  Scale,
+  ShieldCheck,
+  UserCheck,
+  type LucideIcon,
 } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
-/* -------------------------------------------------------------------------- */
-/*                                  Metadata                                  */
-/* -------------------------------------------------------------------------- */
-
-/**
- * Application version
- * - Controlled via environment variable
- * - Falls back to default if not provided
- */
 const APP_VERSION = process.env.NEXT_PUBLIC_APP_VERSION || "3.0.0";
 
-/**
- * Returns formatted Month + Year (e.g., February 2026)
- */
 const getFormattedDate = () =>
   new Date().toLocaleDateString("en-US", {
     year: "numeric",
     month: "long",
   });
 
-/**
- * Centralized legal metadata
- */
 const LEGAL_META = {
   version: APP_VERSION,
   lastUpdated: getFormattedDate(),
 } as const;
 
-/* -------------------------------------------------------------------------- */
-/*                                   Types                                    */
-/* -------------------------------------------------------------------------- */
-
 type TabType = "privacy" | "terms";
 
-/**
- * Structure of a legal content section
- */
 interface LegalSection {
   id: string;
   title: string;
@@ -75,14 +43,6 @@ interface LegalSection {
   content: string;
 }
 
-/* -------------------------------------------------------------------------- */
-/*                               Legal Content                                */
-/* -------------------------------------------------------------------------- */
-
-/**
- * Single source of truth for all legal content.
- * Keeps UI clean and content manageable.
- */
 const LEGAL_CONTENT: Record<TabType, LegalSection[]> = {
   privacy: [
     {
@@ -90,28 +50,28 @@ const LEGAL_CONTENT: Record<TabType, LegalSection[]> = {
       title: "Information We Collect",
       icon: ShieldCheck,
       content:
-        "To deliver a secure and seamless digital library experience, we collect essential data including account credentials, borrowing activity, analytics insights, and technical metadata.",
+        "We collect the operational and account data required to run a secure library experience, including authentication details, borrowing activity, analytics signals, and technical metadata.",
     },
     {
       id: "usage",
       title: "How We Use Your Information",
       icon: Lock,
       content:
-        "Your data is used to authenticate access, manage lending workflows, monitor security, and ensure compliance with regulatory requirements.",
+        "Your information is used to authenticate access, power lending workflows, improve product reliability, and support operational transparency across the platform.",
     },
     {
       id: "security",
-      title: "Data Security & Infrastructure",
+      title: "Data Security and Infrastructure",
       icon: Database,
       content:
-        "All information is encrypted in transit and at rest, protected by role-based access controls, and hosted on secure cloud infrastructure.",
+        "LibraryHub uses role-based access controls, secure storage, and encrypted data handling to protect user and operational information.",
     },
     {
       id: "rights",
-      title: "Your Rights & Data Governance",
+      title: "Your Rights and Governance",
       icon: UserCheck,
       content:
-        "You may request access, correction, deletion, or export of your information under applicable data protection laws.",
+        "You may request access, correction, deletion, or export of your information in line with applicable legal and regulatory requirements.",
     },
   ],
   terms: [
@@ -120,39 +80,32 @@ const LEGAL_CONTENT: Record<TabType, LegalSection[]> = {
       title: "Your Responsibilities",
       icon: FileText,
       content:
-        "You agree to provide accurate information, protect credentials, and use the platform responsibly.",
+        "You agree to provide accurate information, protect account credentials, and use the platform responsibly and lawfully.",
     },
     {
       id: "acceptable",
       title: "Acceptable Use Policy",
       icon: AlertTriangle,
       content:
-        "System abuse, scraping, unauthorized access attempts, or service disruption are strictly prohibited.",
+        "Unauthorized access attempts, scraping, abuse, or disruption of the service are not allowed and may result in restricted access.",
     },
     {
       id: "liability",
       title: "Limitation of Liability",
       icon: Scale,
       content:
-        "The platform is provided 'as-is'. We disclaim liability for indirect or consequential damages.",
+        "LibraryHub is provided as-is, and liability is limited to the maximum extent permitted by law for indirect or consequential damages.",
     },
     {
       id: "updates",
-      title: "Policy Updates & Revisions",
+      title: "Policy Updates and Revisions",
       icon: RefreshCw,
       content:
-        "Policies may change over time. Continued use indicates acceptance of updated terms.",
+        "Policies may be revised over time. Continued use of the platform indicates acceptance of updated legal terms.",
     },
   ],
 };
 
-/* -------------------------------------------------------------------------- */
-/*                               Animations                                   */
-/* -------------------------------------------------------------------------- */
-
-/**
- * Container animation for staggered card entry
- */
 const containerVariants: Variants = {
   hidden: {},
   show: {
@@ -160,140 +113,180 @@ const containerVariants: Variants = {
   },
 };
 
-/**
- * Individual card animation
- */
 const cardVariants: Variants = {
-  hidden: { opacity: 0, y: 25 },
-  show: { opacity: 1, y: 0 },
+  hidden: { opacity: 0, y: 24 },
+  show: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.45, ease: [0.16, 1, 0.3, 1] },
+  },
 };
 
-/* -------------------------------------------------------------------------- */
-/*                              Section Card                                  */
-/* -------------------------------------------------------------------------- */
-
-/**
- * Reusable animated legal section card.
- * - Fully responsive
- * - Equal height inside grid
- * - Subtle hover interaction
- */
-const SectionCard = React.memo(
-  ({ title, icon: Icon, content }: LegalSection) => (
-    <motion.div variants={cardVariants} className="h-full">
-      <Card className="cursor-pointer group h-full flex flex-col justify-between overflow-hidden rounded-2xl border border-border/40 bg-background/70 backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl">
-        <CardContent className="p-8 space-y-5 flex flex-col h-full">
-          <div className="flex items-center gap-4">
-            <div className="p-3 rounded-xl bg-linear-to-br from-primary/20 to-primary/5 text-primary transition-transform duration-300 group-hover:scale-110">
-              <Icon className="w-5 h-5 animate-pulse" />
-            </div>
-            <h3 className="text-lg font-bold tracking-tight bg-linear-to-r from-primary to-purple-500 dark:from-sky-300 dark:to-cyan-400 bg-clip-text text-transparent hover:underline hover:underline-offset-2">
-              {title}
-            </h3>
-          </div>
-
-          <p className="text-muted-foreground leading-relaxed text-sm sm:text-base text-justify grow">
-            {content}
-          </p>
-        </CardContent>
-      </Card>
-    </motion.div>
-  ),
-);
-
-SectionCard.displayName = "SectionCard";
-
-/* -------------------------------------------------------------------------- */
-/*                                Main Page                                   */
-/* -------------------------------------------------------------------------- */
-
 const PrivacyTermsPage: React.FC = () => {
-  /**
-   * Current active tab state
-   */
   const [tab, setTab] = useState<TabType>("privacy");
-
-  /**
-   * Memoized section list based on selected tab
-   */
   const sections = useMemo(() => LEGAL_CONTENT[tab], [tab]);
 
   return (
-    <main className="relative min-h-screen bg-linear-to-b from-background via-muted/20 to-background">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-24">
-        {/* ------------------------------------------------------------------ */}
-        {/* Hero Section                                                        */}
-        {/* ------------------------------------------------------------------ */}
+    <main className="page-surface relative overflow-hidden">
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_18%_18%,rgba(79,70,229,0.14),transparent_24%),radial-gradient(circle_at_82%_20%,rgba(245,158,11,0.12),transparent_24%)]" />
+      <div className="noise-grid pointer-events-none absolute inset-x-6 top-0 bottom-0 opacity-20 [mask-image:linear-gradient(to_bottom,black,transparent_88%)]" />
 
-        <section className="text-center max-w-3xl mx-auto space-y-8 mb-20">
-          <div className="flex justify-center gap-3 flex-wrap">
-            <Badge variant="outline">Version {LEGAL_META.version}</Badge>
+      <div className="container relative mx-auto px-6 py-16 sm:px-10 sm:py-20 lg:px-12">
+        <section className="grid items-center gap-10 lg:grid-cols-[1.05fr_0.95fr]">
+          <div>
+            <Badge
+              variant="outline"
+              className="mb-5 rounded-full border-primary/20 bg-background/75 px-4 py-1.5 text-primary shadow-sm backdrop-blur-sm"
+            >
+              <Library className="mr-1.5 h-3.5 w-3.5" />
+              Privacy and Terms
+            </Badge>
+
+            <h1 className="max-w-3xl text-4xl font-semibold tracking-tight sm:text-5xl md:text-6xl">
+              <span className="accent-text">
+                Transparent legal foundations for a product-grade platform
+              </span>
+            </h1>
+
+            <p className="mt-6 max-w-2xl text-base leading-8 text-muted-foreground sm:text-lg">
+              LibraryHub prioritizes transparency, secure data handling, and
+              responsible governance. This page outlines how information is used,
+              protected, and governed across the platform.
+            </p>
+
+            <div className="mt-8 flex flex-wrap gap-3">
+              <span className="rounded-full border border-primary/10 bg-background/75 px-3 py-1.5 text-sm text-muted-foreground">
+                Version {LEGAL_META.version}
+              </span>
+              <span className="rounded-full border border-primary/10 bg-background/75 px-3 py-1.5 text-sm text-muted-foreground">
+                Updated {LEGAL_META.lastUpdated}
+              </span>
+            </div>
           </div>
 
-          <h1 className="text-4xl sm:text-5xl font-bold tracking-tight leading-[1.2] pb-1 bg-linear-to-r from-primary to-purple-500 dark:from-sky-300 dark:to-cyan-400 bg-clip-text text-transparent">
-            Privacy Policy & Terms
-          </h1>
+          <div className="hero-shell p-5 sm:p-6">
+            <div className="grid gap-4">
+              <Card className="glass-panel rounded-[1.5rem] p-5">
+                <h2 className="text-xl font-semibold tracking-tight">
+                  Legal focus areas
+                </h2>
+                <p className="mt-2 text-sm leading-7 text-muted-foreground">
+                  The policies below are organized around the areas that matter most:
+                  data usage, security, acceptable use, and governance updates.
+                </p>
+              </Card>
 
-          <p className="text-muted-foreground text-lg leading-relaxed">
-            Last updated{" "}
-            <span className="font-semibold text-foreground hover:underline-offset-2 hover:underline cursor-pointer">
-              {LEGAL_META.lastUpdated}
-            </span>
-            . We prioritize transparency, data protection, and responsible
-            governance.
-          </p>
+              <div className="grid gap-4 sm:grid-cols-2">
+                <Card className="glass-panel rounded-[1.5rem] p-5">
+                  <div className="mb-3 inline-flex rounded-full border border-primary/15 bg-primary/10 p-2 text-primary">
+                    <ShieldCheck className="h-4 w-4" />
+                  </div>
+                  <div className="text-lg font-semibold">Privacy</div>
+                  <p className="mt-2 text-sm leading-7 text-muted-foreground">
+                    How LibraryHub handles information, security, and user rights.
+                  </p>
+                </Card>
+
+                <Card className="glass-panel rounded-[1.5rem] p-5">
+                  <div className="mb-3 inline-flex rounded-full border border-secondary/15 bg-secondary/10 p-2 text-secondary">
+                    <FileText className="h-4 w-4" />
+                  </div>
+                  <div className="text-lg font-semibold">Terms</div>
+                  <p className="mt-2 text-sm leading-7 text-muted-foreground">
+                    The responsibilities, usage boundaries, and platform conditions.
+                  </p>
+                </Card>
+              </div>
+            </div>
+          </div>
         </section>
 
-        {/* ------------------------------------------------------------------ */}
-        {/* Tabs Navigation                                                      */}
-        {/* ------------------------------------------------------------------ */}
+        <section className="mt-16">
+          <div className="mx-auto max-w-xl">
+            <Tabs
+              value={tab}
+              onValueChange={(value) => setTab(value as TabType)}
+              className="w-full"
+            >
+              <TabsList className="grid w-full grid-cols-2 rounded-full border border-primary/10 bg-background/78 p-1 shadow-sm">
+                <TabsTrigger
+                  value="privacy"
+                  className="rounded-full data-[state=active]:bg-linear-to-r data-[state=active]:from-primary data-[state=active]:to-secondary data-[state=active]:text-primary-foreground"
+                >
+                  Privacy Policy
+                </TabsTrigger>
+                <TabsTrigger
+                  value="terms"
+                  className="rounded-full data-[state=active]:bg-linear-to-r data-[state=active]:from-primary data-[state=active]:to-secondary data-[state=active]:text-primary-foreground"
+                >
+                  Terms of Service
+                </TabsTrigger>
+              </TabsList>
+            </Tabs>
+          </div>
+        </section>
 
-        <div className="flex justify-center mb-16">
-          <Tabs
-            value={tab}
-            onValueChange={(value) => setTab(value as TabType)}
-            className="w-full"
-          >
-            <TabsList className="grid w-full grid-cols-2 rounded-full bg-muted p-1 shadow-inner">
-              <TabsTrigger
-                value="privacy"
-                className="rounded-full cursor-pointer data-[state=active]:shadow-md transition"
-              >
-                Privacy
-              </TabsTrigger>
-              <TabsTrigger
-                value="terms"
-                className="rounded-full cursor-pointer data-[state=active]:shadow-md transition"
-              >
-                Terms
-              </TabsTrigger>
-            </TabsList>
-          </Tabs>
-        </div>
+        <section className="mt-12">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={tab}
+              variants={containerVariants}
+              initial="hidden"
+              animate="show"
+              exit="hidden"
+              className="grid gap-6 sm:grid-cols-2 auto-rows-fr"
+            >
+              {sections.map((section) => {
+                const Icon = section.icon;
 
-        {/* ------------------------------------------------------------------ */}
-        {/* Animated Content Grid                                               */}
-        {/* ------------------------------------------------------------------ */}
+                return (
+                  <motion.div key={section.id} variants={cardVariants} className="h-full">
+                    <Card className="glass-panel mesh-card h-full rounded-[1.6rem] p-6">
+                      <div className="mb-5 inline-flex rounded-[1rem] border border-primary/15 bg-primary/10 p-3 text-primary">
+                        <Icon className="h-5 w-5" />
+                      </div>
+                      <h3 className="text-xl font-semibold tracking-tight">
+                        {section.title}
+                      </h3>
+                      <p className="mt-3 text-sm leading-7 text-muted-foreground">
+                        {section.content}
+                      </p>
+                    </Card>
+                  </motion.div>
+                );
+              })}
+            </motion.div>
+          </AnimatePresence>
+        </section>
 
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={tab}
-            variants={containerVariants}
-            initial="hidden"
-            animate="show"
-            exit="hidden"
-            className="grid gap-8 grid-cols-1 sm:grid-cols-2 auto-rows-fr"
-          >
-            {sections.map((section) => (
-              <SectionCard key={section.id} {...section} />
-            ))}
-          </motion.div>
-        </AnimatePresence>
+        <section className="mt-16">
+          <div className="glass-panel mesh-card relative overflow-hidden rounded-[2rem] px-6 py-10 text-center sm:px-10 sm:py-14">
+            <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(79,70,229,0.1),transparent_28%),linear-gradient(135deg,rgba(79,70,229,0.05),transparent_45%,rgba(245,158,11,0.08))]" />
+            <div className="relative">
+              <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl md:text-5xl">
+                Need clarification on a policy?
+              </h2>
+              <p className="mx-auto mt-5 max-w-2xl text-base leading-8 text-muted-foreground">
+                If you need help understanding how LibraryHub handles privacy,
+                terms, or platform responsibilities, contact the support team directly.
+              </p>
+              <div className="mt-8 flex justify-center">
+                <Button
+                  asChild
+                  size="lg"
+                  className="rounded-full bg-linear-to-r from-primary to-secondary px-8 text-primary-foreground shadow-[0_18px_45px_-20px_rgba(79,70,229,0.55)]"
+                >
+                  <Link href="/contact">
+                    Contact Support <ArrowRight className="ml-2 h-4 w-4" />
+                  </Link>
+                </Button>
+              </div>
+            </div>
+          </div>
+        </section>
       </div>
     </main>
   );
 };
 
 export default PrivacyTermsPage;
-
-

@@ -1,11 +1,11 @@
 import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import Footer from "@/components/Footer/Footer";
-import Header from "@/components/Header/Header";
 import { Toaster } from "sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { ThemeProvider } from "@/components/theme-provider";
+import { AuthProvider } from "@/components/auth-provider";
+import { RouteFooter, RouteHeader } from "@/components/App/route-chrome";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -94,19 +94,21 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased flex min-h-screen flex-col bg-background`}
       >
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
-          <Header />
-          <main className="flex-1">
-            <TooltipProvider>{children}</TooltipProvider>
-          </main>
-          <Toaster />
-          <Footer />
-        </ThemeProvider>
+        <AuthProvider>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+            <RouteHeader />
+            <main className="flex-1">
+              <TooltipProvider>{children}</TooltipProvider>
+            </main>
+            <Toaster />
+            <RouteFooter />
+          </ThemeProvider>
+        </AuthProvider>
       </body>
     </html>
   );

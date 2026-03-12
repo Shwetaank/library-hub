@@ -38,7 +38,7 @@ const TestimonialMarquee = () => {
             <Card
               className={cn(
                 "ui-card-elevated h-65 rounded-3xl border-border/40",
-                "bg-linear-to-br from-primary/10 to-purple-500/10",
+                "bg-linear-to-br from-primary/10 to-secondary/10",
                 "transition-all duration-300 flex flex-col justify-between",
               )}
             >
@@ -58,7 +58,7 @@ const TestimonialMarquee = () => {
                   </Avatar>
 
                   <div className="min-w-0">
-                    <p className="text-sm font-semibold truncate bg-linear-to-r from-primary to-purple-500 dark:from-sky-300 dark:to-cyan-400 bg-clip-text text-transparent">
+                    <p className="accent-text text-sm font-semibold truncate">
                       {testimonial.name}
                     </p>
                     <p className="text-xs text-muted-foreground truncate">
