@@ -173,7 +173,7 @@ const Footer: React.FC = () => {
                 Product
               </h4>
               <div className="flex flex-col gap-3">
-                <Link href="/books" className={linkClass}>
+                <Link href="/catalog" className={linkClass}>
                   <span>Browse Books</span>
                   <ArrowRight className="h-3.5 w-3.5 text-secondary transition group-hover:translate-x-0.5" />
                 </Link>
@@ -181,7 +181,7 @@ const Footer: React.FC = () => {
                   <span>Dashboard</span>
                   <ArrowRight className="h-3.5 w-3.5 text-secondary transition group-hover:translate-x-0.5" />
                 </Link>
-                <Link href="/favorites" className={linkClass}>
+                <Link href="/dashboard#favorites" className={linkClass}>
                   <span>Favorites</span>
                   <ArrowRight className="h-3.5 w-3.5 text-secondary transition group-hover:translate-x-0.5" />
                 </Link>

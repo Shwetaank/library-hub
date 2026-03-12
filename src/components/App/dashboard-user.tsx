@@ -6,10 +6,12 @@ import {
   LibraryBig,
   TimerReset,
 } from "lucide-react";
+import Link from "next/link";
 import { ListItem, SectionHeader, Surface } from "@/components/App/workspace-cards";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { CardBody, CardContainer, CardItem } from "@/components/ui/3d-card";
 import { Button } from "@/components/ui/button";
+import { ReturnBorrowButton } from "@/components/Books/return-borrow-button";
 
 type UserDashboardData = NonNullable<
   Awaited<ReturnType<typeof import("@/lib/dashboard").getUserDashboardData>>
@@ -190,7 +192,9 @@ export function UserDashboard({ data }: { data: UserDashboardData }) {
                   <div className="mt-2 text-muted-foreground">
                     Start browsing the catalog to build your reading queue.
                   </div>
-                  <Button className="btn-brand mt-6 h-12 rounded-xl px-6 sm:px-8">Browse Catalog</Button>
+                  <Button asChild className="btn-brand mt-6 h-12 rounded-xl px-6 sm:px-8">
+                    <Link href="/catalog">Browse Catalog</Link>
+                  </Button>
                 </div>
               ) : (
                 data.activeBorrows.map((borrow) => (
@@ -210,6 +214,7 @@ export function UserDashboard({ data }: { data: UserDashboardData }) {
                         {borrow.status}
                       </span>
                     }
+                    action={<ReturnBorrowButton borrowId={borrow.id} />}
                   />
                 ))
               )}

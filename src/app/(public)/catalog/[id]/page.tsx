@@ -1,8 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { Heart, Star } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Star } from "lucide-react";
+import { BookActions } from "@/components/Books/book-actions";
 import { getCatalogBookDetail } from "@/lib/discovery";
 
 export const revalidate = 300;
@@ -54,10 +54,7 @@ export default async function CatalogBookDetailPage({
                 />
               </div>
               <div className="border-t border-border/70 p-4">
-                <Button variant="outline" className="w-full rounded-full bg-background">
-                  <Heart className="h-4 w-4" />
-                  Add to Favorites
-                </Button>
+                <BookActions bookId={book.id} initialAvailable={book.available} />
               </div>
             </div>
 

@@ -101,11 +101,13 @@ export function ListItem({
   description,
   meta,
   badge,
+  action,
 }: {
   title: string;
   description: string;
   meta?: string;
   badge?: React.ReactNode;
+  action?: React.ReactNode;
 }) {
   return (
     <div className="ui-card-elevated rounded-[1.4rem] p-4">
@@ -117,6 +119,7 @@ export function ListItem({
         </div>
         {badge ? <div className="shrink-0">{badge}</div> : null}
       </div>
+      {action ? <div className="mt-4 flex justify-end">{action}</div> : null}
     </div>
   );
 }
