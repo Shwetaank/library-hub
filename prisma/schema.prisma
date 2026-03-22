@@ -24,6 +24,7 @@ model User {
   email     String   @unique
   password  String /// Hashed password for authentication
   role      String   @default("USER") /// e.g., "USER" or "ADMIN"
+  avatar    String?  /// Optional URL to the user's avatar image
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 

@@ -9,7 +9,6 @@ import {
   Library,
   LockKeyhole,
   Sparkles,
-  UserRound,
 } from "lucide-react";
 import { toast } from "sonner";
 import { AuthSplitShell } from "@/components/Auth/AuthSplitShell";
@@ -39,7 +38,6 @@ const RegisterPage: React.FC = () => {
 
   const isValid = useMemo(() => {
     const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,100}$/;
-
     return (
       form.name.trim().length >= 2 &&
       /\S+@\S+\.\S+/.test(form.email) &&
@@ -49,7 +47,6 @@ const RegisterPage: React.FC = () => {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const field = e.target.name as keyof RegisterFieldErrors;
-
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
     if (error) setError("");
     if (fieldErrors[field]) {
@@ -79,9 +76,7 @@ const RegisterPage: React.FC = () => {
       const data = await res.json();
 
       if (!res.ok) {
-        if (data.fieldErrors) {
-          setFieldErrors(data.fieldErrors);
-        }
+        if (data.fieldErrors) setFieldErrors(data.fieldErrors);
         setError(data.message || "Unable to create account.");
         return;
       }
@@ -97,182 +92,138 @@ const RegisterPage: React.FC = () => {
 
   useEffect(() => {
     if (!submitted) return;
-
     const interval = setInterval(() => {
-      setCountdown((prev) => {
-        if (prev <= 1) {
-          clearInterval(interval);
-          return 0;
-        }
-
-        return prev - 1;
-      });
+      setCountdown((prev) => (prev <= 1 ? 0 : prev - 1));
     }, 1000);
-
     return () => clearInterval(interval);
   }, [submitted]);
 
   useEffect(() => {
-    if (!submitted || countdown !== 0) return;
-
-    router.push("/login");
+    if (submitted && countdown === 0) router.push("/login");
   }, [countdown, router, submitted]);
 
   return (
-    <AuthSplitShell
-      badge="Create Account"
-      title="Set up your LibraryHub account with the current product flow"
-      description="Create an account to start using LibraryHub through the same system that powers the existing auth service, Prisma user model, and backend validation rules."
-      panelTitle="Register"
-      panelDescription="Create your account with the exact fields supported by the backend today."
-      footerPrompt="Already have an account?"
-      footerActionLabel="Sign in"
-      footerActionHref="/login"
-      highlights={[
-        {
-          icon: Library,
-          title: "Backed by the current schema",
-          description:
-            "Prisma currently stores users with name, email, password, role, createdAt, and updatedAt. The form matches that contract directly.",
-        },
-        {
-          icon: LockKeyhole,
-          title: "Validation aligned with auth rules",
-          description:
-            "Registration follows the existing backend requirement for a strong password with uppercase, lowercase, and numeric characters.",
-        },
-        {
-          icon: Sparkles,
-          title: "Product-consistent onboarding",
-          description:
-            "The register flow now uses the same palette, spacing, and polished surface treatment as the rest of the public product pages.",
-        },
-      ]}
-    >
-      {submitted ? (
-        <div className="space-y-5 py-6 text-center">
-          <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full border border-emerald-500/15 bg-emerald-500/12 text-emerald-600">
-            <CheckCircle2 className="h-8 w-8" />
-          </div>
-          <div>
-            <h3 className="text-3xl font-semibold tracking-tight">Account created</h3>
-            <p className="mt-3 text-sm leading-7 text-muted-foreground">
-              Your account has been created successfully. You will be redirected to sign in in{" "}
-              <span className="font-semibold text-primary">{countdown}</span> seconds.
-            </p>
-          </div>
-          <Button
-            asChild
-            className="h-12 w-full rounded-full bg-linear-to-r from-primary to-secondary text-primary-foreground shadow-[0_18px_40px_-22px_rgba(79,70,229,0.5)]"
-          >
-            <Link href="/login">Continue to sign in</Link>
-          </Button>
-        </div>
-      ) : (
-        <form onSubmit={handleSubmit} className="space-y-5">
-          <div className="space-y-2">
-            <label className="text-sm font-semibold text-foreground">Full name</label>
-            <Input
-              name="name"
-              type="text"
-              placeholder="Enter your full name"
-              value={form.name}
-              onChange={handleChange}
-              className={`h-12 rounded-full bg-background/85 px-4 ${
-                fieldErrors.name
-                  ? "border-red-500 focus-visible:ring-red-500"
-                  : "border-primary/10"
-              }`}
-            />
-            {fieldErrors.name ? (
-              <p className="text-xs text-red-500">{fieldErrors.name[0]}</p>
-            ) : null}
-          </div>
-
-          <div className="space-y-2">
-            <label className="text-sm font-semibold text-foreground">Email address</label>
-            <Input
-              name="email"
-              type="email"
-              placeholder="hello@libraryhub.com"
-              value={form.email}
-              onChange={handleChange}
-              className={`h-12 rounded-full bg-background/85 px-4 ${
-                fieldErrors.email
-                  ? "border-red-500 focus-visible:ring-red-500"
-                  : "border-primary/10"
-              }`}
-            />
-            {fieldErrors.email ? (
-              <p className="text-xs text-red-500">{fieldErrors.email[0]}</p>
-            ) : null}
-          </div>
-
-          <div className="space-y-2">
-            <label className="text-sm font-semibold text-foreground">Password</label>
-            <Input
-              name="password"
-              type="password"
-              placeholder="At least 8 chars, 1 uppercase, 1 number"
-              value={form.password}
-              onChange={handleChange}
-              className={`h-12 rounded-full bg-background/85 px-4 ${
-                fieldErrors.password
-                  ? "border-red-500 focus-visible:ring-red-500"
-                  : "border-primary/10"
-              }`}
-            />
-            {fieldErrors.password ? (
-              <p className="text-xs text-red-500">{fieldErrors.password[0]}</p>
-            ) : null}
-          </div>
-
-          {error ? (
-            <div className="rounded-[1.2rem] border border-red-500/20 bg-red-500/8 px-4 py-3 text-sm text-red-500">
-              {error}
+    <div className="page-surface">
+      <AuthSplitShell
+        badge="Create Account"
+        title="Create your LibraryHub account"
+        description="Start with a clean account setup flow, then move directly into catalog discovery, saved books, and the redesigned member experience."
+        panelTitle="Register"
+        panelDescription="Set up your account to start exploring books, clubs, and your personal workspace."
+        footerPrompt="Already have an account?"
+        footerActionLabel="Sign in"
+        footerActionHref="/login"
+        highlights={[
+          {
+            icon: Library,
+            title: "Fast onboarding",
+            description: "Create an account quickly and move into the discovery flow without extra friction.",
+          },
+          {
+            icon: LockKeyhole,
+            title: "Stronger account protection",
+            description: "Choose a password with uppercase, lowercase, and numeric characters for a more secure account.",
+          },
+          {
+            icon: Sparkles,
+            title: "Product-consistent onboarding",
+            description: "The account creation flow follows the same typography and editorial visual language as the rest of LibraryHub.",
+          },
+        ]}
+      >
+        {submitted ? (
+          <div className="space-y-6 py-8 text-center">
+            <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full border-2 border-primary/20 bg-primary/10 text-primary">
+              <CheckCircle2 className="h-8 w-8" />
             </div>
-          ) : null}
-
-          <Button
-            type="submit"
-            disabled={!isValid || loading}
-            className="h-12 w-full rounded-full bg-linear-to-r from-primary to-secondary text-primary-foreground shadow-[0_18px_40px_-22px_rgba(79,70,229,0.5)]"
-          >
-            {loading ? "Creating account..." : "Create account"}
-          </Button>
-
-          <div className="rounded-[1.4rem] border border-primary/10 bg-background/76 p-4">
-            <div className="flex items-center gap-2 text-sm font-medium text-foreground">
-              <BadgeCheck className="h-4 w-4 text-primary" />
-              Backend-aligned registration fields
+            <div>
+              <h3 className="text-3xl font-semibold tracking-[-0.04em]">Account created</h3>
+              <p className="mt-3 text-base leading-7 text-muted-foreground">
+                You will be redirected to sign in in{" "}
+                <span className="font-semibold text-primary">{countdown}s</span>.
+              </p>
             </div>
-            <p className="mt-2 text-sm leading-7 text-muted-foreground">
-              The current backend expects <code>name</code>, <code>email</code>, and{" "}
-              <code>password</code>. New users are stored in Prisma with the default{" "}
-              <code>USER</code> role.
-            </p>
+            <Button asChild className="h-12 w-full rounded-full bg-primary text-base text-primary-foreground hover:bg-primary/92">
+              <Link href="/login">Continue to sign in</Link>
+            </Button>
           </div>
-
-          <div className="rounded-[1.4rem] border border-primary/10 bg-background/76 p-4">
-            <div className="flex items-center gap-2 text-sm font-medium text-foreground">
-              <UserRound className="h-4 w-4 text-secondary" />
-              Password rule
+        ) : (
+          <form onSubmit={handleSubmit} className="space-y-5">
+            <div className="space-y-2">
+              <label className="text-sm font-semibold text-foreground">Full name</label>
+              <Input
+                name="name"
+                type="text"
+                placeholder="Enter your full name"
+                value={form.name}
+                onChange={handleChange}
+                className={`h-12 rounded-xl px-4 text-base ${
+                  fieldErrors.name ? "border-destructive focus-visible:ring-destructive/40" : ""
+                }`}
+              />
+              {fieldErrors.name && <p className="text-xs text-destructive">{fieldErrors.name[0]}</p>}
             </div>
-            <p className="mt-2 text-sm leading-7 text-muted-foreground">
-              Use at least 8 characters with one uppercase letter, one lowercase letter,
-              and one number to match the current auth schema.
-            </p>
-          </div>
 
-          <div className="text-center text-sm text-muted-foreground">
-            Want to explore first?{" "}
-            <Link href="/about" className="font-semibold text-foreground hover:text-primary">
-              Learn about LibraryHub
-            </Link>
-          </div>
-        </form>
-      )}
-    </AuthSplitShell>
+            <div className="space-y-2">
+              <label className="text-sm font-semibold text-foreground">Email address</label>
+              <Input
+                name="email"
+                type="email"
+                placeholder="hello@libraryhub.com"
+                value={form.email}
+                onChange={handleChange}
+                className={`h-12 rounded-xl px-4 text-base ${
+                  fieldErrors.email ? "border-destructive focus-visible:ring-destructive/40" : ""
+                }`}
+              />
+              {fieldErrors.email && <p className="text-xs text-destructive">{fieldErrors.email[0]}</p>}
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-sm font-semibold text-foreground">Password</label>
+              <Input
+                name="password"
+                type="password"
+                placeholder="At least 8 chars, 1 uppercase, 1 number"
+                value={form.password}
+                onChange={handleChange}
+                className={`h-12 rounded-xl px-4 text-base ${
+                  fieldErrors.password ? "border-destructive focus-visible:ring-destructive/40" : ""
+                }`}
+              />
+              {fieldErrors.password && <p className="text-xs text-destructive">{fieldErrors.password[0]}</p>}
+            </div>
+
+            {error && (
+              <div className="rounded-xl border border-destructive/20 bg-destructive/10 px-4 py-3 text-sm text-destructive">
+                {error}
+              </div>
+            )}
+
+            <Button type="submit" disabled={!isValid || loading} className="h-12 w-full rounded-full bg-primary text-base text-primary-foreground hover:bg-primary/92">
+              {loading ? "Creating account..." : "Create account"}
+            </Button>
+
+            <div className="rounded-xl border bg-muted/40 p-4">
+              <div className="flex items-center gap-3 text-sm font-medium text-foreground">
+                <BadgeCheck className="h-5 w-5 text-primary" />
+                Password guidance
+              </div>
+              <p className="mt-2 text-sm leading-6 text-muted-foreground">
+                Use at least 8 characters and include uppercase, lowercase, and a number to create a stronger account.
+              </p>
+            </div>
+
+            <div className="text-center text-sm text-muted-foreground">
+              Want to explore first?{" "}
+              <Link href="/about" className="font-semibold text-foreground hover:text-primary">
+                Learn about LibraryHub
+              </Link>
+            </div>
+          </form>
+        )}
+      </AuthSplitShell>
+    </div>
   );
 };
 

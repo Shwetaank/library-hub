@@ -3,7 +3,9 @@
  * @param dateString The date string to format.
  * @returns The formatted date string.
  */
-export const formatDate = (dateString: string): string => {
+export const formatDate = (dateString?: string | null): string => {
+  if (!dateString) return "TBD";
+
   const isoDateMatch = dateString.match(/^(\d{4})-(\d{2})-(\d{2})$/);
 
   // Preserve exact calendar day for date-only strings and avoid timezone drift.

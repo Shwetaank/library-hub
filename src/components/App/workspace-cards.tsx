@@ -12,34 +12,25 @@ export function MetricCard({
   tone?: "default" | "primary" | "secondary" | "success" | "warning";
 }) {
   const toneClass = {
-    default:
-      "before:from-white/80 before:to-white/20 dark:before:from-white/8 dark:before:to-transparent",
-    primary:
-      "before:from-primary/25 before:to-primary/5 dark:before:from-primary/18 dark:before:to-transparent",
-    secondary:
-      "before:from-secondary/25 before:to-secondary/5 dark:before:from-secondary/18 dark:before:to-transparent",
-    success:
-      "before:from-emerald-500/22 before:to-emerald-500/5 dark:before:from-emerald-500/18 dark:before:to-transparent",
-    warning:
-      "before:from-amber-500/22 before:to-amber-500/5 dark:before:from-amber-500/18 dark:before:to-transparent",
+    default: "border-border/70 bg-card/80",
+    primary: "border-primary/20 bg-primary/10",
+    secondary: "border-secondary/20 bg-secondary/10",
+    success: "border-emerald-500/20 bg-emerald-500/10",
+    warning: "border-amber-500/20 bg-amber-500/10",
   }[tone];
 
   return (
     <div
       className={cn(
-        "glass-panel mesh-card relative overflow-hidden rounded-[1.75rem] p-5 before:absolute before:inset-0 before:bg-linear-to-br",
+        "rounded-[1.8rem] border p-5 shadow-sm backdrop-blur-xl",
         toneClass,
       )}
     >
-      <div className="relative">
-        <div className="text-[11px] font-semibold uppercase tracking-[0.22em] text-muted-foreground">
-          {label}
-        </div>
-        <div className="mt-4 text-3xl font-semibold tracking-[-0.04em] text-foreground">
-          {value}
-        </div>
-        {helper ? <div className="mt-2 text-sm text-muted-foreground">{helper}</div> : null}
+      <div className="text-sm font-semibold uppercase tracking-widest text-muted-foreground">
+        {label}
       </div>
+      <div className="mt-4 text-3xl font-semibold tracking-[-0.05em] text-foreground">{value}</div>
+      {helper && <div className="mt-2 text-sm text-muted-foreground">{helper}</div>}
     </div>
   );
 }
@@ -52,12 +43,11 @@ export function Surface({
   return (
     <section
       className={cn(
-        "glass-panel mesh-card relative overflow-hidden rounded-[2rem] p-5 sm:p-6",
+        "rounded-[2rem] border border-border/70 bg-card/80 p-5 shadow-sm backdrop-blur-xl sm:p-6",
         className,
       )}
       {...props}
     >
-      <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-foreground/10 to-transparent" />
       {children}
     </section>
   );
@@ -77,21 +67,21 @@ export function SectionHeader({
   return (
     <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
       <div>
-        {eyebrow ? (
-          <div className="text-[11px] font-semibold uppercase tracking-[0.24em] text-muted-foreground">
+        {eyebrow && (
+          <div className="text-sm font-semibold uppercase tracking-widest text-primary">
             {eyebrow}
           </div>
-        ) : null}
-        <h3 className="mt-1 text-xl font-semibold tracking-[-0.03em] text-foreground">
+        )}
+        <h3 className="mt-1 text-xl font-semibold tracking-[-0.04em] text-foreground sm:text-2xl">
           {title}
         </h3>
-        {description ? (
-          <p className="mt-2 max-w-2xl text-sm leading-6 text-muted-foreground">
+        {description && (
+          <p className="mt-2 max-w-2xl text-base leading-7 text-muted-foreground">
             {description}
           </p>
-        ) : null}
+        )}
       </div>
-      {action ? <div className="shrink-0">{action}</div> : null}
+      {action && <div className="shrink-0">{action}</div>}
     </div>
   );
 }
@@ -110,16 +100,20 @@ export function ListItem({
   action?: React.ReactNode;
 }) {
   return (
-    <div className="ui-card-elevated rounded-[1.4rem] p-4">
-      <div className="flex items-start justify-between gap-4">
+    <div className="rounded-[1.5rem] border border-border/70 bg-muted/40 p-4 shadow-sm">
+      <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
         <div className="min-w-0">
           <div className="font-medium text-foreground">{title}</div>
           <div className="mt-1 text-sm text-muted-foreground">{description}</div>
-          {meta ? <div className="mt-3 text-xs text-muted-foreground">{meta}</div> : null}
+          {meta && (
+            <div className="mt-3 text-xs uppercase tracking-wider text-muted-foreground">
+              {meta}
+            </div>
+          )}
         </div>
-        {badge ? <div className="shrink-0">{badge}</div> : null}
+        {badge && <div className="shrink-0 self-start">{badge}</div>}
       </div>
-      {action ? <div className="mt-4 flex justify-end">{action}</div> : null}
+      {action && <div className="mt-4 flex justify-end">{action}</div>}
     </div>
   );
 }

@@ -11,22 +11,20 @@ import { motion, Variants, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
 import { Club, MOCK_CLUBS } from "./data";
 import { formatDate } from "@/utils/helpers";
 import { toast } from "sonner";
 import {
-  ArrowRight,
   Calendar,
   Clock3,
   Library,
   Lock,
   Search,
   Sparkles,
-  TrendingUp,
   Users,
 } from "lucide-react";
 import Link from "next/link";
+import { cn } from "@/lib/utils";
 
 const listeners = new Set<() => void>();
 
@@ -52,7 +50,7 @@ const fadeUp: Variants = {
   show: {
     opacity: 1,
     y: 0,
-    transition: { duration: 0.45, ease: [0.16, 1, 0.3, 1] },
+    transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] },
   },
 };
 
@@ -64,11 +62,12 @@ const staggerContainer: Variants = {
 };
 
 const categoryColors: Record<string, string> = {
-  fiction: "border-blue-200 bg-blue-500/10 text-blue-600",
-  "non-fiction": "border-emerald-200 bg-emerald-500/10 text-emerald-600",
-  mystery: "border-purple-200 bg-purple-500/10 text-purple-600",
-  "sci-fi": "border-cyan-200 bg-cyan-500/10 text-cyan-600",
-  romance: "border-pink-200 bg-pink-500/10 text-pink-600",
+  fiction: "border-primary/20 bg-primary/10 text-primary",
+  "non-fiction": "border-blue-500/20 bg-blue-500/10 text-blue-500",
+  mystery: "border-amber-500/20 bg-amber-500/10 text-amber-500",
+  "sci-fi": "border-indigo-500/20 bg-indigo-500/10 text-indigo-500",
+  romance: "border-pink-500/20 bg-pink-500/10 text-pink-500",
+  fantasy: "border-purple-500/20 bg-purple-500/10 text-purple-500",
 };
 
 interface ClubCardProps {
@@ -84,114 +83,93 @@ const ClubCard = React.memo(
       <motion.div
         variants={fadeUp}
         layout
-        whileHover={{ y: -5 }}
-        transition={{ type: "spring", stiffness: 220, damping: 18 }}
+        className="group overflow-hidden rounded-[1.6rem] border border-border/70 bg-card shadow-sm transition-all duration-300 hover:!border-primary/40 hover:shadow-lg"
       >
-        <Card className="glass-panel mesh-card flex h-full flex-col overflow-hidden rounded-[1.7rem]">
-          <div className="relative h-52 w-full overflow-hidden">
-            <Image
-              src={club.image}
-              alt={club.name}
-              fill
-              className="object-cover transition-transform duration-700 group-hover:scale-105"
-              sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 33vw"
-              priority={priorityImage}
-            />
-            <div className="absolute inset-0 bg-linear-to-t from-background/95 via-background/15 to-transparent" />
-            <div className="absolute left-4 top-4 flex flex-wrap gap-2">
-              <span
-                className={`rounded-full border px-3 py-1 text-xs font-medium capitalize backdrop-blur-sm ${
-                  categoryColors[club.category] ??
-                  "border-primary/10 bg-background/75 text-muted-foreground"
-                }`}
-              >
-                {club.category}
+        <div className="relative h-56 w-full overflow-hidden">
+          <Image
+            src={club.image}
+            alt={club.name}
+            fill
+            className="object-cover transition-transform duration-500 group-hover:scale-105"
+            sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 33vw"
+            priority={priorityImage}
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
+          <div className="absolute left-4 top-4 flex flex-wrap gap-2">
+            <span
+              className={cn(
+                "rounded-full border px-3 py-1 text-xs font-medium capitalize backdrop-blur-sm",
+                categoryColors[club.category] ??
+                  "border-border bg-card text-muted-foreground",
+              )}
+            >
+              {club.category}
+            </span>
+
+            {club.privacy === "private" ? (
+              <span className="inline-flex items-center gap-1 rounded-full border border-white/20 bg-black/40 px-3 py-1 text-xs font-medium text-white backdrop-blur-sm">
+                <Lock className="h-3 w-3" />
+                Private
               </span>
+            ) : null}
+          </div>
+          {isJoined ? (
+            <span className="absolute right-4 top-4 rounded-full border border-primary/20 bg-primary/10 px-3 py-1 text-xs font-medium text-primary backdrop-blur-sm">
+              Joined
+            </span>
+          ) : null}
+        </div>
 
-              {club.privacy === "private" ? (
-                <span className="inline-flex items-center gap-1 rounded-full border border-primary/10 bg-background/80 px-3 py-1 text-xs font-medium text-foreground/75 backdrop-blur-sm">
-                  <Lock className="h-3 w-3" />
-                  Private
-                </span>
-              ) : null}
+        <div className="flex flex-1 flex-col p-5">
+          <h3 className="text-xl font-semibold tracking-tight text-foreground">
+            {club.name}
+          </h3>
+          <p className="mt-1 text-sm text-muted-foreground">
+            Community-led reading club
+          </p>
+
+          <p className="mb-5 mt-4 text-base leading-7 text-muted-foreground">
+            {club.description}
+          </p>
+
+          <div className="mb-5 rounded-[1.2rem] border bg-muted/40 p-4">
+            <div className="text-xs uppercase tracking-widest text-muted-foreground">
+              Current Book
+            </div>
+            <div className="mt-2 text-base font-semibold text-foreground">
+              {club.currentBook.title}
+            </div>
+            <div className="mt-1 text-sm text-muted-foreground">
+              {club.currentBook.author}
             </div>
           </div>
 
-          <div className="flex flex-1 flex-col p-5">
-            <div className="mb-3 flex items-start justify-between gap-4">
-              <div>
-                <h3 className="text-xl font-semibold tracking-tight text-foreground">
-                  {club.name}
-                </h3>
-                <p className="mt-1 text-sm text-muted-foreground">
-                  Community-led reading club
-                </p>
-              </div>
-              {isJoined ? (
-                <span className="rounded-full border border-primary/15 bg-primary/10 px-3 py-1 text-xs font-medium text-primary">
-                  Joined
-                </span>
-              ) : null}
+          <div className="mb-6 grid grid-cols-2 gap-4 text-sm">
+            <div className="flex items-center gap-2 text-foreground">
+              <Users className="h-5 w-5 text-primary" />
+              <span className="font-semibold">
+                {club.members.toLocaleString()}
+              </span>
+              <span className="text-muted-foreground">members</span>
             </div>
-
-            <p className="mb-5 text-sm leading-7 text-muted-foreground">
-              {club.description}
-            </p>
-
-            <div className="mb-5 rounded-[1.25rem] border border-primary/10 bg-background/78 p-4">
-              <div className="text-xs uppercase tracking-[0.18em] text-muted-foreground">
-                Current Book
-              </div>
-              <div className="mt-2 text-base font-semibold text-foreground">
-                {club.currentBook.title}
-              </div>
-              <div className="mt-1 text-sm text-muted-foreground">
-                {club.currentBook.author}
-              </div>
-            </div>
-
-            <div className="mb-5 grid gap-3 sm:grid-cols-2">
-              <div className="rounded-2xl border border-primary/10 bg-background/75 px-4 py-3">
-                <div className="flex items-center gap-2 text-xs uppercase tracking-[0.16em] text-muted-foreground">
-                  <Users className="h-3.5 w-3.5 text-primary" />
-                  Members
-                </div>
-                <div className="mt-2 text-sm font-semibold">
-                  {club.members.toLocaleString()}
-                </div>
-              </div>
-
-              <div className="rounded-2xl border border-primary/10 bg-background/75 px-4 py-3">
-                <div className="flex items-center gap-2 text-xs uppercase tracking-[0.16em] text-muted-foreground">
-                  <Calendar className="h-3.5 w-3.5 text-secondary" />
-                  Discussion
-                </div>
-                <div className="mt-2 text-sm font-semibold">
-                  {formatDate(club.currentBook.discussionDate)}
-                </div>
-              </div>
-            </div>
-
-            <div className="mt-auto flex flex-col gap-3 sm:flex-row">
-              <Button
-                onClick={() => onToggle(club.id)}
-                variant={isJoined ? "secondary" : "outline"}
-                className="w-full rounded-full border-primary/10 sm:flex-1"
-              >
-                {isJoined ? "Leave Club" : "Join Club"}
-              </Button>
-
-              <Button
-                asChild
-                className="w-full rounded-full bg-linear-to-r from-primary to-secondary text-primary-foreground shadow-[0_16px_40px_-24px_rgba(79,70,229,0.45)] sm:flex-1"
-              >
-                <Link href="/contact">
-                  Learn More <ArrowRight className="ml-2 h-4 w-4" />
-                </Link>
-              </Button>
+            <div className="flex items-center gap-2 text-foreground">
+              <Calendar className="h-5 w-5 text-primary" />
+              <span className="font-semibold">
+                {formatDate(club.currentBook.discussionDate)}
+              </span>
             </div>
           </div>
-        </Card>
+
+          <div className="mt-auto flex flex-col gap-3 sm:flex-row">
+            <Button
+              onClick={() => onToggle(club.id)}
+              variant={isJoined ? "secondary" : "default"}
+              className="w-full rounded-full sm:flex-1"
+            >
+              {isJoined ? "Leave Club" : "Join Club"}
+            </Button>
+          </div>
+        </div>
       </motion.div>
     );
   },
@@ -261,100 +239,66 @@ const ClubsPage: React.FC = () => {
 
   return (
     <div className="page-surface">
-      <section className="relative overflow-hidden px-6 py-16 sm:py-20 md:py-24">
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_18%_18%,rgba(79,70,229,0.14),transparent_24%),radial-gradient(circle_at_82%_20%,rgba(245,158,11,0.12),transparent_24%)]" />
-        <div className="noise-grid pointer-events-none absolute inset-x-6 top-0 bottom-0 opacity-20 [mask-image:linear-gradient(to_bottom,black,transparent_90%)]" />
-
-        <div className="container relative mx-auto">
-          <motion.div
-            initial="hidden"
-            animate="show"
-            variants={staggerContainer}
-            className="grid items-center gap-10 lg:grid-cols-[1.05fr_0.95fr]"
-          >
-            <motion.div variants={fadeUp}>
-              <Badge
-                variant="outline"
-                className="mb-5 rounded-full border-primary/20 bg-background/75 px-4 py-1.5 text-primary shadow-sm backdrop-blur-sm"
-              >
-                <Library className="mr-1.5 h-3.5 w-3.5" />
-                Reading Clubs
-              </Badge>
-
-              <h1 className="max-w-3xl text-4xl font-semibold tracking-tight sm:text-5xl md:text-6xl">
-                <span className="accent-text">
-                  Community-driven reading experiences built around shared discovery
-                </span>
-              </h1>
-
-              <p className="mt-6 max-w-2xl text-base leading-8 text-muted-foreground sm:text-lg">
-                Explore clubs by genre, join reading groups that match your interests,
-                and follow upcoming discussions through a cleaner product flow.
-              </p>
-
-              <div className="mt-8 max-w-xl">
-                <div className="relative">
-                  <Search className="absolute left-5 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground" />
-                  <Input
-                    placeholder="Search clubs, genres, or current books..."
-                    value={search}
-                    onChange={(e) => setSearch(e.target.value)}
-                    className="h-14 rounded-full border-primary/10 bg-background/80 pl-14 text-base shadow-sm"
-                  />
+      <section className="px-4 pb-12 pt-8 sm:px-6 sm:pt-10">
+        <div className="mx-auto max-w-[1440px]">
+          <div className="hero-shell rounded-[2.25rem] px-6 py-10 sm:px-10 sm:py-12">
+            <div className="grid items-center gap-8 lg:grid-cols-[1.05fr_0.95fr]">
+              <div>
+                <div className="inline-flex items-center gap-2 rounded-full border border-primary/15 bg-card/80 px-4 py-2 text-sm font-medium text-primary shadow-sm">
+                  <Library className="h-4 w-4" />
+                  Reading Clubs
+                </div>
+                <h1 className="hero-title mt-6 max-w-3xl !text-4xl sm:!text-5xl">
+                  Community-driven reading experiences for shared discovery.
+                </h1>
+                <p className="hero-copy mt-5 !max-w-2xl !text-base sm:!text-lg">
+                  Explore clubs by genre, join reading groups that match your interests, and
+                  follow upcoming discussions through a cleaner product flow.
+                </p>
+                <div className="mt-8 max-w-xl">
+                  <div className="relative">
+                    <Search className="pointer-events-none absolute left-5 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground" />
+                    <Input
+                      placeholder="Search clubs, genres, or current books..."
+                      value={search}
+                      onChange={(e) => setSearch(e.target.value)}
+                      className="h-14 w-full rounded-full border-2 border-border/80 bg-card/90 px-14 text-base shadow-sm outline-none transition-all focus:border-primary/60 focus:ring-4 focus:ring-primary/20"
+                    />
+                  </div>
                 </div>
               </div>
 
-              <div className="mt-8 flex flex-wrap gap-3">
-                <span className="rounded-full border border-primary/10 bg-background/75 px-3 py-1.5 text-sm text-muted-foreground">
-                  {clubs.length} active clubs
-                </span>
-                <span className="rounded-full border border-primary/10 bg-background/75 px-3 py-1.5 text-sm text-muted-foreground">
-                  {totalMembers.toLocaleString()} community members
-                </span>
-                <span className="rounded-full border border-primary/10 bg-background/75 px-3 py-1.5 text-sm text-muted-foreground">
-                  Live discussion schedules
-                </span>
-              </div>
-            </motion.div>
-
-            <motion.div variants={fadeUp} className="hero-shell p-5 sm:p-6">
               <div className="grid gap-4">
-                <Card className="glass-panel rounded-[1.5rem] p-5">
+                <Card className="ui-card-elevated rounded-[1.7rem] border-border/70 bg-card/88 p-5 shadow-[0_20px_40px_-30px_rgba(15,23,42,0.12)] backdrop-blur-xl">
                   <div className="mb-4 flex items-center justify-between">
-                    <div>
-                      <div className="text-sm font-semibold">Club Activity</div>
-                      <div className="mt-1 text-xs uppercase tracking-[0.18em] text-muted-foreground">
-                        Current network overview
-                      </div>
-                    </div>
-                    <div className="rounded-full border border-primary/15 bg-primary/10 px-3 py-1 text-xs font-medium text-primary">
-                      Community Live
+                    <div className="text-base font-semibold">Club Activity</div>
+                    <div className="rounded-full bg-primary/10 px-4 py-1.5 text-xs font-semibold text-primary">
+                      Live
                     </div>
                   </div>
-
-                  <div className="grid gap-3 sm:grid-cols-3">
-                    <div className="rounded-2xl border border-primary/10 bg-background/75 p-4 text-center">
-                      <Sparkles className="mx-auto mb-2 h-4 w-4 text-primary" />
+                  <div className="grid grid-cols-3 gap-3">
+                    <div className="rounded-xl border bg-background/70 p-3 text-center">
+                      <Sparkles className="mx-auto mb-2 h-5 w-5 text-primary" />
                       <div className="text-lg font-semibold">{featured.length}</div>
                       <div className="text-xs text-muted-foreground">Featured</div>
                     </div>
-                    <div className="rounded-2xl border border-primary/10 bg-background/75 p-4 text-center">
-                      <Users className="mx-auto mb-2 h-4 w-4 text-primary" />
+                    <div className="rounded-xl border bg-background/70 p-3 text-center">
+                      <Users className="mx-auto mb-2 h-5 w-5 text-primary" />
                       <div className="text-lg font-semibold">
                         {totalMembers.toLocaleString()}
                       </div>
                       <div className="text-xs text-muted-foreground">Members</div>
                     </div>
-                    <div className="rounded-2xl border border-primary/10 bg-background/75 p-4 text-center">
-                      <Clock3 className="mx-auto mb-2 h-4 w-4 text-secondary" />
+                    <div className="rounded-xl border bg-background/70 p-3 text-center">
+                      <Clock3 className="mx-auto mb-2 h-5 w-5 text-primary" />
                       <div className="text-lg font-semibold">Weekly</div>
-                      <div className="text-xs text-muted-foreground">Discussions</div>
+                      <div className="text-xs text-muted-foreground">Chats</div>
                     </div>
                   </div>
                 </Card>
 
-                <Card className="glass-panel rounded-[1.5rem] p-5">
-                  <div className="text-sm font-semibold">What you can do here</div>
+                <Card className="ui-card-elevated rounded-[1.7rem] border-border/70 bg-card/88 p-5 shadow-[0_20px_40px_-30px_rgba(15,23,42,0.12)] backdrop-blur-xl">
+                  <div className="text-base font-semibold">What you can do here</div>
                   <div className="mt-4 space-y-3">
                     {[
                       "Find clubs by reading interest or genre",
@@ -363,74 +307,67 @@ const ClubsPage: React.FC = () => {
                     ].map((item) => (
                       <div
                         key={item}
-                        className="flex items-center gap-3 rounded-2xl border border-primary/10 bg-background/75 px-4 py-3"
+                        className="flex items-center gap-3 rounded-lg border bg-background/70 px-4 py-3"
                       >
-                        <Sparkles className="h-4 w-4 text-secondary" />
+                        <Sparkles className="h-4 w-4 flex-shrink-0 text-primary" />
                         <span className="text-sm text-foreground/85">{item}</span>
                       </div>
                     ))}
                   </div>
                 </Card>
               </div>
-            </motion.div>
-          </motion.div>
+            </div>
+          </div>
         </div>
       </section>
 
-      <section className="px-6 py-16 sm:py-20">
-        <div className="container mx-auto">
-          <div className="mb-8 flex items-center gap-3">
-            <div className="rounded-full border border-primary/15 bg-primary/10 p-2 text-primary">
-              <Sparkles className="h-4 w-4" />
+      <section className="px-4 py-12 sm:px-6 sm:py-16">
+        <div className="mx-auto max-w-[1440px]">
+          <div className="mb-10 max-w-3xl">
+            <div className="text-sm font-semibold uppercase tracking-widest text-primary">
+              Featured
             </div>
-            <div>
-              <h2 className="text-2xl font-semibold tracking-tight sm:text-3xl">
-                Featured clubs
-              </h2>
-              <p className="mt-1 text-sm text-muted-foreground">
-                Community spaces currently shaping the reading experience.
-              </p>
-            </div>
+            <h2 className="section-title mt-4">
+              Community spaces shaping the reading experience.
+            </h2>
           </div>
 
           <motion.div
             variants={staggerContainer}
             initial="hidden"
             whileInView="show"
-            viewport={{ once: true }}
+            viewport={{ once: true, amount: 0.1 }}
             className="grid gap-6 lg:grid-cols-3"
           >
-            {featured.map((club) => (
+            {featured.map((club, i) => (
               <ClubCard
                 key={club.id}
                 club={club}
                 isJoined={joinedSet.has(club.id)}
                 onToggle={toggleJoin}
-                priorityImage
+                priorityImage={i === 0}
               />
             ))}
           </motion.div>
         </div>
       </section>
 
-      <section className="border-t border-primary/10 px-6 py-16 sm:py-20">
-        <div className="container mx-auto">
-          <div className="mb-8 flex items-center gap-3">
-            <div className="rounded-full border border-secondary/15 bg-secondary/10 p-2 text-secondary">
-              <TrendingUp className="h-4 w-4" />
+      <section className="border-t border-border/70 px-4 py-12 sm:px-6 sm:py-16">
+        <div className="mx-auto max-w-[1440px]">
+          <div className="mb-10 max-w-3xl">
+            <div className="text-sm font-semibold uppercase tracking-widest text-primary">
+              Explore
             </div>
-            <div>
-              <h2 className="text-2xl font-semibold tracking-tight sm:text-3xl">
-                Explore all clubs
-              </h2>
-              <p className="mt-1 text-sm text-muted-foreground">
-                Search results update based on club name, category, and current reading picks.
-              </p>
-            </div>
+            <h2 className="section-title mt-4">
+              Search all clubs
+            </h2>
+             <p className="section-copy mt-5 !text-lg">
+                  Results update based on club name, category, and current reading picks.
+                </p>
           </div>
 
           {filtered.length === 0 ? (
-            <div className="glass-panel rounded-[1.8rem] px-6 py-14 text-center text-muted-foreground">
+            <div className="rounded-2xl border bg-card px-6 py-20 text-center text-muted-foreground">
               No clubs found for your current search.
             </div>
           ) : (
@@ -456,27 +393,22 @@ const ClubsPage: React.FC = () => {
         </div>
       </section>
 
-      <section className="px-6 pb-16 pt-16 sm:pb-20 sm:pt-20">
-        <div className="container mx-auto">
-          <div className="glass-panel mesh-card relative overflow-hidden rounded-[2rem] px-6 py-10 text-center sm:px-10 sm:py-14">
-            <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(79,70,229,0.1),transparent_28%),linear-gradient(135deg,rgba(79,70,229,0.05),transparent_45%,rgba(245,158,11,0.08))]" />
-            <div className="relative">
-              <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl md:text-5xl">
-                Want help choosing the right reading club?
-              </h2>
-              <p className="mx-auto mt-5 max-w-2xl text-base leading-8 text-muted-foreground">
-                Reach out to the team if you want help finding the best fit for
-                your genre, reading goals, or discussion style.
-              </p>
-              <div className="mt-8 flex justify-center">
-                <Button
-                  asChild
-                  size="lg"
-                  className="rounded-full bg-linear-to-r from-primary to-secondary px-8 text-primary-foreground shadow-[0_18px_45px_-20px_rgba(79,70,229,0.55)]"
-                >
-                  <Link href="/contact">
-                    Contact Support <ArrowRight className="ml-2 h-4 w-4" />
-                  </Link>
+      <section className="px-4 pb-16 pt-4 sm:px-6 sm:pb-20">
+        <div className="mx-auto max-w-[1440px]">
+          <div className="rounded-[2.25rem] border border-border/70 bg-[radial-gradient(circle_at_top_left,rgba(99,102,241,0.06),transparent_28%),radial-gradient(circle_at_bottom_right,rgba(148,163,184,0.08),transparent_24%),color-mix(in_oklch,var(--color-card)_92%,transparent)] px-8 py-10 shadow-[0_28px_70px_-44px_rgba(15,23,42,0.14)] sm:px-12 sm:py-14">
+            <div className="grid gap-10 lg:grid-cols-[1fr_auto] lg:items-center">
+              <div>
+                <h2 className="mt-5 max-w-3xl text-4xl font-semibold tracking-[-0.06em] sm:text-5xl">
+                  Want help choosing the right club?
+                </h2>
+                <p className="mt-5 max-w-2xl text-lg leading-9 text-muted-foreground">
+                  Reach out to the team if you want help finding the best fit for your genre,
+                  reading goals, or discussion style.
+                </p>
+              </div>
+              <div className="flex flex-col gap-4 sm:flex-row lg:justify-self-end">
+                <Button asChild size="lg" className="rounded-2xl bg-primary px-7 text-primary-foreground hover:bg-primary/92">
+                  <Link href="/contact">Contact Support</Link>
                 </Button>
               </div>
             </div>

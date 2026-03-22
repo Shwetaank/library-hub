@@ -4,7 +4,7 @@ import { usePathname } from "next/navigation";
 import Header from "@/components/Header/Header";
 import Footer from "@/components/Footer/Footer";
 
-const workspacePrefixes = ["/settings"];
+const workspacePrefixes = ["/settings", "/dashboard", "/admin"];
 
 function useIsWorkspaceRoute() {
   const pathname = usePathname();

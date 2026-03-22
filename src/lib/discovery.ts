@@ -134,8 +134,14 @@ export async function getAuthorsPageData() {
       favoriteCount: number;
       latestTitle: string;
       latestCreatedAt: Date;
+      imageUrl: string | null;
     }
   >();
+
+  const authorImageMap: Record<string, string> = {
+    "J.R.R. Tolkien": "/images/authors/tolkien.jpg",
+    "J.K. Rowling": "/images/authors/rowling.jpg",
+  };
 
   for (const book of books) {
     const current = authorMap.get(book.author) ?? {
@@ -148,6 +154,7 @@ export async function getAuthorsPageData() {
       favoriteCount: 0,
       latestTitle: book.title,
       latestCreatedAt: book.createdAt,
+      imageUrl: authorImageMap[book.author] ?? null,
     };
 
     current.titles += 1;
@@ -275,6 +282,7 @@ export async function getCatalogBookDetail(id: number) {
           user: {
             select: {
               name: true,
+              avatar: true,
             },
           },
         },

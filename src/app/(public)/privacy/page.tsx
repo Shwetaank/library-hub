@@ -5,7 +5,6 @@ import { motion, AnimatePresence, Variants } from "framer-motion";
 import Link from "next/link";
 import {
   AlertTriangle,
-  ArrowRight,
   Database,
   FileText,
   Library,
@@ -16,7 +15,6 @@ import {
   UserCheck,
   type LucideIcon,
 } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -118,7 +116,7 @@ const cardVariants: Variants = {
   show: {
     opacity: 1,
     y: 0,
-    transition: { duration: 0.45, ease: [0.16, 1, 0.3, 1] },
+    transition: { duration: 0.45, ease: [0.22, 1, 0.36, 1] },
   },
 };
 
@@ -127,165 +125,145 @@ const PrivacyTermsPage: React.FC = () => {
   const sections = useMemo(() => LEGAL_CONTENT[tab], [tab]);
 
   return (
-    <main className="page-surface relative overflow-hidden">
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_18%_18%,rgba(79,70,229,0.14),transparent_24%),radial-gradient(circle_at_82%_20%,rgba(245,158,11,0.12),transparent_24%)]" />
-      <div className="noise-grid pointer-events-none absolute inset-x-6 top-0 bottom-0 opacity-20 [mask-image:linear-gradient(to_bottom,black,transparent_88%)]" />
-
-      <div className="container relative mx-auto px-6 py-16 sm:px-10 sm:py-20 lg:px-12">
-        <section className="grid items-center gap-10 lg:grid-cols-[1.05fr_0.95fr]">
-          <div>
-            <Badge
-              variant="outline"
-              className="mb-5 rounded-full border-primary/20 bg-background/75 px-4 py-1.5 text-primary shadow-sm backdrop-blur-sm"
-            >
-              <Library className="mr-1.5 h-3.5 w-3.5" />
-              Privacy and Terms
-            </Badge>
-
-            <h1 className="max-w-3xl text-4xl font-semibold tracking-tight sm:text-5xl md:text-6xl">
-              <span className="accent-text">
-                Transparent legal foundations for a product-grade platform
-              </span>
-            </h1>
-
-            <p className="mt-6 max-w-2xl text-base leading-8 text-muted-foreground sm:text-lg">
-              LibraryHub prioritizes transparency, secure data handling, and
-              responsible governance. This page outlines how information is used,
-              protected, and governed across the platform.
-            </p>
-
-            <div className="mt-8 flex flex-wrap gap-3">
-              <span className="rounded-full border border-primary/10 bg-background/75 px-3 py-1.5 text-sm text-muted-foreground">
-                Version {LEGAL_META.version}
-              </span>
-              <span className="rounded-full border border-primary/10 bg-background/75 px-3 py-1.5 text-sm text-muted-foreground">
-                Updated {LEGAL_META.lastUpdated}
-              </span>
-            </div>
-          </div>
-
-          <div className="hero-shell p-5 sm:p-6">
-            <div className="grid gap-4">
-              <Card className="glass-panel rounded-[1.5rem] p-5">
-                <h2 className="text-xl font-semibold tracking-tight">
-                  Legal focus areas
-                </h2>
-                <p className="mt-2 text-sm leading-7 text-muted-foreground">
-                  The policies below are organized around the areas that matter most:
-                  data usage, security, acceptable use, and governance updates.
+    <div className="page-surface">
+      <section className="px-4 pb-12 pt-8 sm:px-6 sm:pt-10">
+        <div className="mx-auto max-w-[1440px]">
+          <div className="hero-shell rounded-[2.25rem] px-6 py-10 sm:px-10 sm:py-12">
+            <div className="grid items-center gap-8 lg:grid-cols-[1.05fr_0.95fr]">
+              <div>
+                <div className="inline-flex items-center gap-2 rounded-full border border-primary/15 bg-card/80 px-4 py-2 text-sm font-medium text-primary shadow-sm">
+                  <Library className="h-4 w-4" />
+                  Privacy and Terms
+                </div>
+                <h1 className="hero-title mt-6 max-w-3xl !text-4xl sm:!text-5xl">
+                  Transparent legal foundations for a modern library platform.
+                </h1>
+                <p className="hero-copy mt-5 !max-w-2xl !text-base sm:!text-lg">
+                  LibraryHub prioritizes transparency, secure data handling, and responsible
+                  governance. This page outlines how information is used, protected, and
+                  governed across the platform.
                 </p>
-              </Card>
-
+                <div className="mt-8 flex flex-wrap gap-3">
+                  <span className="rounded-full border bg-card/90 px-4 py-2 text-sm text-muted-foreground shadow-sm">
+                    Version {LEGAL_META.version}
+                  </span>
+                  <span className="rounded-full border bg-card/90 px-4 py-2 text-sm text-muted-foreground shadow-sm">
+                    Updated {LEGAL_META.lastUpdated}
+                  </span>
+                </div>
+              </div>
               <div className="grid gap-4 sm:grid-cols-2">
-                <Card className="glass-panel rounded-[1.5rem] p-5">
-                  <div className="mb-3 inline-flex rounded-full border border-primary/15 bg-primary/10 p-2 text-primary">
-                    <ShieldCheck className="h-4 w-4" />
+                <Card className="ui-card-elevated rounded-[1.7rem] border-border/70 bg-card/88 p-5 shadow-[0_20px_40px_-30px_rgba(15,23,42,0.12)] backdrop-blur-xl">
+                  <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-2xl bg-primary/10 text-primary">
+                    <ShieldCheck className="h-6 w-6" />
                   </div>
-                  <div className="text-lg font-semibold">Privacy</div>
-                  <p className="mt-2 text-sm leading-7 text-muted-foreground">
+                  <div className="text-xl font-semibold">Privacy</div>
+                  <p className="mt-2 text-base leading-7 text-muted-foreground">
                     How LibraryHub handles information, security, and user rights.
                   </p>
                 </Card>
-
-                <Card className="glass-panel rounded-[1.5rem] p-5">
-                  <div className="mb-3 inline-flex rounded-full border border-secondary/15 bg-secondary/10 p-2 text-secondary">
-                    <FileText className="h-4 w-4" />
+                <Card className="ui-card-elevated rounded-[1.7rem] border-border/70 bg-card/88 p-5 shadow-[0_20px_40px_-30px_rgba(15,23,42,0.12)] backdrop-blur-xl">
+                  <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-2xl bg-primary/10 text-primary">
+                    <FileText className="h-6 w-6" />
                   </div>
-                  <div className="text-lg font-semibold">Terms</div>
-                  <p className="mt-2 text-sm leading-7 text-muted-foreground">
+                  <div className="text-xl font-semibold">Terms</div>
+                  <p className="mt-2 text-base leading-7 text-muted-foreground">
                     The responsibilities, usage boundaries, and platform conditions.
                   </p>
                 </Card>
               </div>
             </div>
           </div>
-        </section>
+        </div>
+      </section>
 
-        <section className="mt-16">
-          <div className="mx-auto max-w-xl">
+      <section className="px-4 pb-16 pt-4 sm:px-6 sm:pb-20">
+        <div className="mx-auto max-w-[1440px]">
+          <div className="mx-auto max-w-2xl">
             <Tabs
               value={tab}
               onValueChange={(value) => setTab(value as TabType)}
               className="w-full"
             >
-              <TabsList className="grid w-full grid-cols-2 rounded-full border border-primary/10 bg-background/78 p-1 shadow-sm">
+              <TabsList className="grid h-14 w-full grid-cols-2 rounded-full border-2 border-border/80 bg-card/90 p-1 shadow-sm">
                 <TabsTrigger
                   value="privacy"
-                  className="rounded-full data-[state=active]:bg-linear-to-r data-[state=active]:from-primary data-[state=active]:to-secondary data-[state=active]:text-primary-foreground"
+                  className="rounded-full text-base data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
                 >
                   Privacy Policy
                 </TabsTrigger>
                 <TabsTrigger
                   value="terms"
-                  className="rounded-full data-[state=active]:bg-linear-to-r data-[state=active]:from-primary data-[state=active]:to-secondary data-[state=active]:text-primary-foreground"
+                  className="rounded-full text-base data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
                 >
                   Terms of Service
                 </TabsTrigger>
               </TabsList>
             </Tabs>
           </div>
-        </section>
 
-        <section className="mt-12">
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={tab}
-              variants={containerVariants}
-              initial="hidden"
-              animate="show"
-              exit="hidden"
-              className="grid gap-6 sm:grid-cols-2 auto-rows-fr"
-            >
-              {sections.map((section) => {
-                const Icon = section.icon;
+          <div className="mt-12">
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={tab}
+                variants={containerVariants}
+                initial="hidden"
+                animate="show"
+                exit="hidden"
+                className="grid auto-rows-fr gap-6 sm:grid-cols-2"
+              >
+                {sections.map((section) => {
+                  const Icon = section.icon;
 
-                return (
-                  <motion.div key={section.id} variants={cardVariants} className="h-full">
-                    <Card className="glass-panel mesh-card h-full rounded-[1.6rem] p-6">
-                      <div className="mb-5 inline-flex rounded-[1rem] border border-primary/15 bg-primary/10 p-3 text-primary">
-                        <Icon className="h-5 w-5" />
-                      </div>
-                      <h3 className="text-xl font-semibold tracking-tight">
-                        {section.title}
-                      </h3>
-                      <p className="mt-3 text-sm leading-7 text-muted-foreground">
-                        {section.content}
-                      </p>
-                    </Card>
-                  </motion.div>
-                );
-              })}
-            </motion.div>
-          </AnimatePresence>
-        </section>
+                  return (
+                    <motion.div
+                      key={section.id}
+                      variants={cardVariants}
+                      className="h-full"
+                    >
+                      <Card className="h-full rounded-[1.8rem] border border-border/70 bg-card/80 p-6 shadow-sm">
+                        <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-primary/10 text-primary">
+                          <Icon className="h-7 w-7" />
+                        </div>
+                        <h3 className="text-2xl font-semibold tracking-[-0.04em]">
+                          {section.title}
+                        </h3>
+                        <p className="mt-4 text-base leading-8 text-muted-foreground">
+                          {section.content}
+                        </p>
+                      </Card>
+                    </motion.div>
+                  );
+                })}
+              </motion.div>
+            </AnimatePresence>
+          </div>
+        </div>
+      </section>
 
-        <section className="mt-16">
-          <div className="glass-panel mesh-card relative overflow-hidden rounded-[2rem] px-6 py-10 text-center sm:px-10 sm:py-14">
-            <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(79,70,229,0.1),transparent_28%),linear-gradient(135deg,rgba(79,70,229,0.05),transparent_45%,rgba(245,158,11,0.08))]" />
-            <div className="relative">
-              <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl md:text-5xl">
-                Need clarification on a policy?
-              </h2>
-              <p className="mx-auto mt-5 max-w-2xl text-base leading-8 text-muted-foreground">
-                If you need help understanding how LibraryHub handles privacy,
-                terms, or platform responsibilities, contact the support team directly.
-              </p>
-              <div className="mt-8 flex justify-center">
-                <Button
-                  asChild
-                  size="lg"
-                  className="rounded-full bg-linear-to-r from-primary to-secondary px-8 text-primary-foreground shadow-[0_18px_45px_-20px_rgba(79,70,229,0.55)]"
-                >
-                  <Link href="/contact">
-                    Contact Support <ArrowRight className="ml-2 h-4 w-4" />
-                  </Link>
+      <section className="px-4 pb-16 pt-4 sm:px-6 sm:pb-20">
+        <div className="mx-auto max-w-[1440px]">
+          <div className="rounded-[2.25rem] border border-border/70 bg-[radial-gradient(circle_at_top_left,rgba(99,102,241,0.06),transparent_28%),radial-gradient(circle_at_bottom_right,rgba(148,163,184,0.08),transparent_24%),color-mix(in_oklch,var(--color-card)_92%,transparent)] px-8 py-10 shadow-[0_28px_70px_-44px_rgba(15,23,42,0.14)] sm:px-12 sm:py-14">
+            <div className="grid gap-10 lg:grid-cols-[1fr_auto] lg:items-center">
+              <div>
+                <h2 className="mt-5 max-w-3xl text-4xl font-semibold tracking-[-0.06em] sm:text-5xl">
+                  Need clarification on a policy?
+                </h2>
+                <p className="mt-5 max-w-2xl text-lg leading-9 text-muted-foreground">
+                  If you need help understanding how LibraryHub handles privacy, terms, or
+                  platform responsibilities, contact the support team directly.
+                </p>
+              </div>
+              <div className="flex flex-col gap-4 sm:flex-row lg:justify-self-end">
+                <Button asChild size="lg" className="rounded-2xl bg-primary px-7 text-primary-foreground hover:bg-primary/92">
+                  <Link href="/contact">Contact Support</Link>
                 </Button>
               </div>
             </div>
           </div>
-        </section>
-      </div>
-    </main>
+        </div>
+      </section>
+    </div>
   );
 };
 

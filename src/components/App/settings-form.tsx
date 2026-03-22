@@ -1,14 +1,15 @@
 "use client";
 
 import { useState, useTransition } from "react";
-import { BellRing, KeyRound, Shield, SlidersHorizontal, UserRound } from "lucide-react";
+import { BellRing, KeyRound, Shield, SlidersHorizontal } from "lucide-react";
 import { toast } from "sonner";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { ROLE_LABELS, ROLES, type AppRole } from "@/constants/roles";
+import { ROLE_LABELS, type AppRole } from "@/constants/roles";
 import { SectionHeader, Surface } from "@/components/App/workspace-cards";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 
 type SettingsFormProps = {
   user: {
@@ -62,12 +63,14 @@ export function SettingsForm({ user }: SettingsFormProps) {
   const [passwordPending, startPasswordTransition] = useTransition();
   const [preferencesPending, startPreferencesTransition] = useTransition();
 
+  const initials = user.name.split(" ").map((n) => n[0]).join("").slice(0, 2);
+
   function savePreferences(next: Preferences) {
     const key = `libraryhub-preferences-${user.id}`;
     startPreferencesTransition(() => {
       window.localStorage.setItem(key, JSON.stringify(next));
       setPreferences(next);
-      toast.success("Saved");
+      toast.success("Preferences saved");
     });
   }
 
@@ -84,7 +87,7 @@ export function SettingsForm({ user }: SettingsFormProps) {
         toast.error(data.message ?? "Could not update profile");
         return;
       }
-      toast.success("Saved");
+      toast.success("Profile updated");
     });
   }
 
@@ -110,75 +113,67 @@ export function SettingsForm({ user }: SettingsFormProps) {
         return;
       }
       setPasswords({ currentPassword: "", newPassword: "", confirmPassword: "" });
-      toast.success("Saved");
+      toast.success("Password updated");
     });
   }
 
   return (
     <div className="grid gap-6 xl:grid-cols-[0.72fr_1.28fr]">
       <Surface className="h-fit">
-        <div className="flex items-center gap-3">
-          <div className="flex h-14 w-14 items-center justify-center rounded-full bg-[linear-gradient(135deg,rgba(79,70,229,0.16),rgba(245,158,11,0.16))] text-lg font-semibold text-primary">
-            {user.name
-              .split(" ")
-              .map((segment) => segment[0])
-              .join("")
-              .slice(0, 2)}
-          </div>
+        <div className="flex items-center gap-5">
+          <Avatar className="h-20 w-20 text-2xl">
+            <AvatarFallback>{initials}</AvatarFallback>
+          </Avatar>
           <div>
-            <div className="text-xl font-semibold tracking-[-0.03em]">{user.name}</div>
-            <div className="text-sm text-muted-foreground">{user.email}</div>
+            <div className="text-2xl font-semibold tracking-[-0.04em]">{user.name}</div>
+            <div className="text-base text-muted-foreground">{user.email}</div>
           </div>
         </div>
 
-        <div className="mt-5 space-y-3">
-          <div className="rounded-[1.4rem] border border-black/5 bg-black/[0.02] p-4 dark:border-white/10 dark:bg-white/[0.03]">
-            <div className="text-[11px] font-semibold uppercase tracking-[0.22em] text-muted-foreground">Role</div>
-            <div className="mt-2 text-sm font-medium">{ROLE_LABELS[user.role]}</div>
+        <div className="mt-6 space-y-3">
+          <div className="rounded-[1.4rem] border bg-muted/50 p-4">
+            <div className="text-sm font-semibold uppercase tracking-widest text-muted-foreground">Role</div>
+            <div className="mt-2 text-base font-medium">{ROLE_LABELS[user.role]}</div>
           </div>
-          <div className="rounded-[1.4rem] border border-black/5 bg-black/[0.02] p-4 dark:border-white/10 dark:bg-white/[0.03]">
-            <div className="text-[11px] font-semibold uppercase tracking-[0.22em] text-muted-foreground">Since</div>
-            <div className="mt-2 text-sm font-medium">{user.createdAt.toLocaleDateString()}</div>
-          </div>
-          <div className="rounded-[1.4rem] border border-black/5 bg-black/[0.02] p-4 dark:border-white/10 dark:bg-white/[0.03]">
-            <div className="text-[11px] font-semibold uppercase tracking-[0.22em] text-muted-foreground">Source</div>
-            <div className="mt-2 text-sm text-muted-foreground">Prisma-backed account</div>
+          <div className="rounded-[1.4rem] border bg-muted/50 p-4">
+            <div className="text-sm font-semibold uppercase tracking-widest text-muted-foreground">Since</div>
+            <div className="mt-2 text-base font-medium">{user.createdAt.toLocaleDateString()}</div>
           </div>
         </div>
       </Surface>
 
       <Tabs defaultValue="profile" className="space-y-5">
-        <TabsList className="grid h-auto grid-cols-3 rounded-[1.5rem] border border-white/55 bg-white/72 p-1 backdrop-blur-xl dark:border-white/10 dark:bg-white/[0.04]">
-          <TabsTrigger value="profile" className="rounded-[1rem] py-2.5">Profile</TabsTrigger>
-          <TabsTrigger value="security" className="rounded-[1rem] py-2.5">Security</TabsTrigger>
-          <TabsTrigger value="preferences" className="rounded-[1rem] py-2.5">Preferences</TabsTrigger>
+        <TabsList className="grid h-14 w-full grid-cols-3 rounded-2xl bg-muted/60 p-1.5">
+          <TabsTrigger value="profile" className="rounded-xl py-2.5 text-base">Profile</TabsTrigger>
+          <TabsTrigger value="security" className="rounded-xl py-2.5 text-base">Security</TabsTrigger>
+          <TabsTrigger value="preferences" className="rounded-xl py-2.5 text-base">Preferences</TabsTrigger>
         </TabsList>
 
         <TabsContent value="profile">
           <Surface>
-            <SectionHeader title="Profile" />
+            <SectionHeader title="Profile" description="Update your name and email address." />
             <form className="mt-6 space-y-5" onSubmit={submitProfile}>
               <div className="grid gap-4 md:grid-cols-2">
                 <div className="space-y-2">
-                  <label className="text-sm font-medium">Full name</label>
+                  <label className="text-sm font-semibold">Full name</label>
                   <Input
                     value={profile.name}
-                    onChange={(event) => setProfile((current) => ({ ...current, name: event.target.value }))}
-                    className="h-12 rounded-2xl border-black/8 bg-black/[0.02] px-4 dark:border-white/10 dark:bg-white/[0.03]"
+                    onChange={(e) => setProfile({ ...profile, name: e.target.value })}
+                    className="h-12 rounded-xl text-base"
                   />
                 </div>
                 <div className="space-y-2">
-                  <label className="text-sm font-medium">Email</label>
+                  <label className="text-sm font-semibold">Email</label>
                   <Input
                     type="email"
                     value={profile.email}
-                    onChange={(event) => setProfile((current) => ({ ...current, email: event.target.value }))}
-                    className="h-12 rounded-2xl border-black/8 bg-black/[0.02] px-4 dark:border-white/10 dark:bg-white/[0.03]"
+                    onChange={(e) => setProfile({ ...profile, email: e.target.value })}
+                    className="h-12 rounded-xl text-base"
                   />
                 </div>
               </div>
-              <Button type="submit" className="rounded-full bg-foreground px-5 text-background hover:opacity-90" disabled={profilePending}>
-                {profilePending ? "Saving..." : "Save"}
+              <Button type="submit" className="rounded-full bg-primary px-6 text-primary-foreground hover:bg-primary/92" disabled={profilePending}>
+                {profilePending ? "Saving..." : "Save Changes"}
               </Button>
             </form>
           </Surface>
@@ -186,45 +181,45 @@ export function SettingsForm({ user }: SettingsFormProps) {
 
         <TabsContent value="security">
           <Surface>
-            <SectionHeader title="Security" />
+            <SectionHeader title="Security" description="Manage your password and account security settings." />
             <form className="mt-6 space-y-5" onSubmit={submitPassword}>
               <div className="space-y-2">
-                <label className="text-sm font-medium">Current password</label>
+                <label className="text-sm font-semibold">Current password</label>
                 <Input
                   type="password"
                   value={passwords.currentPassword}
-                  onChange={(event) => setPasswords((current) => ({ ...current, currentPassword: event.target.value }))}
-                  className="h-12 rounded-2xl border-black/8 bg-black/[0.02] px-4 dark:border-white/10 dark:bg-white/[0.03]"
+                  onChange={(e) => setPasswords({ ...passwords, currentPassword: e.target.value })}
+                  className="h-12 rounded-xl text-base"
                 />
               </div>
               <div className="grid gap-4 md:grid-cols-2">
                 <div className="space-y-2">
-                  <label className="text-sm font-medium">New password</label>
+                  <label className="text-sm font-semibold">New password</label>
                   <Input
                     type="password"
                     value={passwords.newPassword}
-                    onChange={(event) => setPasswords((current) => ({ ...current, newPassword: event.target.value }))}
-                    className="h-12 rounded-2xl border-black/8 bg-black/[0.02] px-4 dark:border-white/10 dark:bg-white/[0.03]"
+                    onChange={(e) => setPasswords({ ...passwords, newPassword: e.target.value })}
+                    className="h-12 rounded-xl text-base"
                   />
                 </div>
                 <div className="space-y-2">
-                  <label className="text-sm font-medium">Confirm</label>
+                  <label className="text-sm font-semibold">Confirm new password</label>
                   <Input
                     type="password"
                     value={passwords.confirmPassword}
-                    onChange={(event) => setPasswords((current) => ({ ...current, confirmPassword: event.target.value }))}
-                    className="h-12 rounded-2xl border-black/8 bg-black/[0.02] px-4 dark:border-white/10 dark:bg-white/[0.03]"
+                    onChange={(e) => setPasswords({ ...passwords, confirmPassword: e.target.value })}
+                    className="h-12 rounded-xl text-base"
                   />
                 </div>
               </div>
-              <div className="rounded-[1.4rem] border border-black/5 bg-black/[0.02] p-4 dark:border-white/10 dark:bg-white/[0.03]">
-                <div className="flex items-center gap-2 text-sm font-semibold">
-                  <KeyRound className="h-4 w-4 text-primary" />
-                  8+ chars, uppercase, lowercase, number
+              <div className="rounded-xl border bg-muted/40 p-4">
+                <div className="flex items-center gap-3 text-sm font-medium">
+                  <KeyRound className="h-5 w-5 text-primary" />
+                  Password must contain 8+ characters, one uppercase, one lowercase, and one number.
                 </div>
               </div>
-              <Button type="submit" className="rounded-full bg-foreground px-5 text-background hover:opacity-90" disabled={passwordPending}>
-                {passwordPending ? "Saving..." : "Save"}
+              <Button type="submit" className="rounded-full bg-primary px-6 text-primary-foreground hover:bg-primary/92" disabled={passwordPending}>
+                {passwordPending ? "Saving..." : "Save Changes"}
               </Button>
             </form>
           </Surface>
@@ -232,68 +227,43 @@ export function SettingsForm({ user }: SettingsFormProps) {
 
         <TabsContent value="preferences">
           <Surface>
-            <SectionHeader title="Preferences" />
+            <SectionHeader title="Preferences" description="Customize your workspace and notification settings." />
             <div className="mt-6 grid gap-4 md:grid-cols-2">
-              <button
-                type="button"
-                onClick={() => savePreferences({ ...preferences, digestEmails: !preferences.digestEmails })}
-                className="rounded-[1.5rem] border border-black/5 bg-black/[0.02] p-4 text-left transition hover:bg-black/[0.03] dark:border-white/10 dark:bg-white/[0.03] dark:hover:bg-white/[0.05]"
-              >
-                <div className="flex items-center gap-2 text-sm font-semibold">
-                  <BellRing className="h-4 w-4 text-primary" />
-                  Digest emails
-                </div>
-                <div className="mt-3 text-sm text-muted-foreground">{preferences.digestEmails ? "On" : "Off"}</div>
-              </button>
-              <button
-                type="button"
-                onClick={() => savePreferences({ ...preferences, dueReminders: !preferences.dueReminders })}
-                className="rounded-[1.5rem] border border-black/5 bg-black/[0.02] p-4 text-left transition hover:bg-black/[0.03] dark:border-white/10 dark:bg-white/[0.03] dark:hover:bg-white/[0.05]"
-              >
-                <div className="flex items-center gap-2 text-sm font-semibold">
-                  <Shield className="h-4 w-4 text-primary" />
-                  Due reminders
-                </div>
-                <div className="mt-3 text-sm text-muted-foreground">{preferences.dueReminders ? "On" : "Off"}</div>
-              </button>
-              <button
-                type="button"
-                onClick={() => savePreferences({ ...preferences, compactMode: !preferences.compactMode })}
-                className="rounded-[1.5rem] border border-black/5 bg-black/[0.02] p-4 text-left transition hover:bg-black/[0.03] dark:border-white/10 dark:bg-white/[0.03] dark:hover:bg-white/[0.05]"
-              >
-                <div className="flex items-center gap-2 text-sm font-semibold">
-                  <SlidersHorizontal className="h-4 w-4 text-primary" />
-                  Compact mode
-                </div>
-                <div className="mt-3 text-sm text-muted-foreground">{preferences.compactMode ? "On" : "Off"}</div>
-              </button>
-              <div className="rounded-[1.5rem] border border-black/5 bg-black/[0.02] p-4 dark:border-white/10 dark:bg-white/[0.03]">
-                <div className="flex items-center gap-2 text-sm font-semibold">
-                  <UserRound className="h-4 w-4 text-primary" />
-                  {user.role === ROLES.ADMIN ? "Admin mode" : "Reader mode"}
-                </div>
-                <div className="mt-3 text-sm text-muted-foreground">
-                  {user.role === ROLES.ADMIN ? "Ops-first layout" : "Reader-first layout"}
-                </div>
-              </div>
+              {[
+                { id: "digestEmails", label: "Digest emails", icon: BellRing },
+                { id: "dueReminders", label: "Due reminders", icon: Shield },
+                { id: "compactMode", label: "Compact mode", icon: SlidersHorizontal },
+              ].map(({ id, label, icon: Icon }) => (
+                <button
+                  key={id}
+                  type="button"
+                  onClick={() => savePreferences({ ...preferences, [id]: !preferences[id as keyof Preferences] })}
+                  className="rounded-[1.2rem] border bg-muted/40 p-4 text-left transition-colors hover:bg-muted/60"
+                >
+                  <div className="flex items-center gap-3 text-base font-semibold">
+                    <Icon className="h-5 w-5 text-primary" />
+                    {label}
+                  </div>
+                  <div className="mt-3 text-sm text-muted-foreground">{preferences[id as keyof Preferences] ? "On" : "Off"}</div>
+                </button>
+              ))}
             </div>
-
             <div className="mt-5 space-y-2">
-              <label className="text-sm font-medium">Note</label>
+              <label className="text-sm font-semibold">Workspace Note</label>
               <Textarea
                 value={preferences.workspaceNote}
-                onChange={(event) => setPreferences((current) => ({ ...current, workspaceNote: event.target.value }))}
-                placeholder="Optional note"
-                className="min-h-28 rounded-[1.6rem] border-black/8 bg-black/[0.02] px-4 py-3 dark:border-white/10 dark:bg-white/[0.03]"
+                onChange={(e) => setPreferences({ ...preferences, workspaceNote: e.target.value })}
+                placeholder="Leave a note for yourself in the workspace..."
+                className="min-h-28 rounded-xl text-base"
               />
               <Button
                 type="button"
                 variant="outline"
-                className="rounded-full border-black/8 bg-white/75 dark:border-white/10 dark:bg-white/[0.04]"
+                className="rounded-full"
                 disabled={preferencesPending}
                 onClick={() => savePreferences(preferences)}
               >
-                {preferencesPending ? "Saving..." : "Save"}
+                {preferencesPending ? "Saving..." : "Save Note"}
               </Button>
             </div>
           </Surface>

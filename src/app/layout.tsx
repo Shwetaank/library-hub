@@ -1,19 +1,26 @@
 import type { Metadata, Viewport } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { IBM_Plex_Mono, Space_Grotesk } from "next/font/google";
 import "./globals.css";
+
+const spaceGrotesk = Space_Grotesk({
+  variable: "--font-space-grotesk",
+  subsets: ["latin"],
+});
+
+const ibmPlexMono = IBM_Plex_Mono({
+  variable: "--font-ibm-plex-mono",
+  subsets: ["latin"],
+  weight: ["400", "500"],
+});
 import { Toaster } from "sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { ThemeProvider } from "@/components/theme-provider";
 import { AuthProvider } from "@/components/auth-provider";
 import { RouteFooter, RouteHeader } from "@/components/App/route-chrome";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-});
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-});
+
+
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://libraryhub.vercel.app"),
@@ -83,7 +90,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#0f172a",
+  themeColor: "#f4efe7",
 };
 
 export default function RootLayout({
@@ -92,7 +99,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased flex min-h-screen flex-col bg-background`}
+        className={`${spaceGrotesk.variable} ${ibmPlexMono.variable} flex min-h-screen flex-col bg-background antialiased`}
       >
         <AuthProvider>
           <ThemeProvider

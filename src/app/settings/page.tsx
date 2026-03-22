@@ -10,7 +10,7 @@ export default async function SettingsPage() {
     <AppShell
       role={user.role as AppRole}
       heading="Settings"
-      subheading="Manage Prisma-backed account details, password security, and the preference layer that completes the workspace experience."
+      subheading="Manage your account details, password security, and the preferences that shape your LibraryHub workspace."
     >
       <SettingsForm user={user} />
     </AppShell>

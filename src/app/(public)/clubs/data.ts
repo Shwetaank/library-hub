@@ -26,7 +26,7 @@ export const MOCK_CLUBS: Club[] = [
     currentBook: {
       title: "The Silent Patient",
       author: "Alex Michaelides",
-      discussionDate: "2026-03-15",
+      discussionDate: "2026-04-03",
     },
   },
   {
@@ -41,7 +41,7 @@ export const MOCK_CLUBS: Club[] = [
     currentBook: {
       title: "Dune",
       author: "Frank Herbert",
-      discussionDate: "2026-03-20",
+      discussionDate: "2026-04-10",
     },
   },
   {
@@ -56,7 +56,7 @@ export const MOCK_CLUBS: Club[] = [
     currentBook: {
       title: "Pride and Prejudice",
       author: "Jane Austen",
-      discussionDate: "2026-03-22",
+      discussionDate: "2026-04-17",
     },
   },
   {
@@ -69,9 +69,9 @@ export const MOCK_CLUBS: Club[] = [
     privacy: "private",
     members: 42,
     currentBook: {
-      title: "Sapiens: A Brief History of Humankind",
+      title: "Sapiens",
       author: "Yuval Noah Harari",
-      discussionDate: "2026-04-01",
+      discussionDate: "2026-04-24",
     },
   },
   {
@@ -86,7 +86,7 @@ export const MOCK_CLUBS: Club[] = [
     currentBook: {
       title: "To Kill a Mockingbird",
       author: "Harper Lee",
-      discussionDate: "2026-04-05",
+      discussionDate: "2026-05-01",
     },
   },
 ];
