@@ -18,10 +18,6 @@ import { ThemeProvider } from "@/components/theme-provider";
 import { AuthProvider } from "@/components/auth-provider";
 import { RouteFooter, RouteHeader } from "@/components/App/route-chrome";
 
-
-
-
-
 export const metadata: Metadata = {
   metadataBase: new URL("https://libraryhub.vercel.app"),
 

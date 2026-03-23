@@ -2,84 +2,133 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { ArrowRight, Compass, LibraryBig, ShieldCheck } from "lucide-react";
-import { motion } from "framer-motion";
+import { ArrowRight, LibraryBig } from "lucide-react";
+import { motion, type Variants } from "framer-motion";
 
-const CTASection = () => {
+/* ✅ Animation Variants (FIXED TYPES) */
+const container: Variants = {
+  hidden: {},
+  visible: {
+    transition: {
+      staggerChildren: 0.12,
+    },
+  },
+};
+
+const fadeUp: Variants = {
+  hidden: { opacity: 0, y: 30 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.5,
+      ease: [0.22, 1, 0.36, 1] as const, // ✅ FIXED
+    },
+  },
+};
+
+const CTASection: React.FC = () => {
   return (
-    <section className="px-4 pb-16 pt-4 sm:px-6 sm:pb-20">
-      <div className="mx-auto max-w-[1440px]">
-        <div className="relative overflow-hidden rounded-[2.4rem] border border-border/70 bg-[linear-gradient(135deg,color-mix(in_oklch,var(--color-primary)_78%,black)_0%,color-mix(in_oklch,var(--color-primary)_42%,var(--color-accent))_100%)] px-8 py-12 text-primary-foreground shadow-[0_32px_90px_-44px_rgba(20,33,61,0.42)] sm:px-12 sm:py-14">
-          <div className="absolute inset-0 opacity-20" style={{ backgroundImage: "url('/images/covers/pattern.svg')" }} />
-          <div className="absolute -right-10 top-0 h-40 w-40 rounded-full bg-white/10 blur-3xl" />
-          <div className="absolute bottom-0 left-0 h-48 w-48 rounded-full bg-white/10 blur-3xl" />
+    <section className="relative w-full py-28 lg:py-36 overflow-hidden">
+      {/* 🌈 Background */}
+      <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_top,rgba(99,102,241,0.12),transparent_50%),radial-gradient(circle_at_bottom_right,rgba(236,72,153,0.08),transparent_45%)]" />
 
-          <div className="relative z-10 grid gap-10 lg:grid-cols-[1fr_auto] lg:items-center">
-            <div className="max-w-3xl">
-              <div className="inline-flex items-center gap-2 rounded-full border border-white/16 bg-white/10 px-4 py-2 font-mono text-[0.72rem] uppercase tracking-[0.24em] text-white/88">
-                <LibraryBig className="h-3.5 w-3.5" />
-                Ready To Launch
-              </div>
-        <motion.h2
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          viewport={{ once: true }}
-                className="mt-6 max-w-3xl text-4xl font-semibold leading-[1.04] tracking-[-0.07em] text-white sm:text-5xl"
-        >
-                Ready to experience the future of library management?
-        </motion.h2>
-        <motion.p
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.2 }}
-          viewport={{ once: true }}
-                className="mt-5 max-w-2xl text-lg leading-9 text-white/78"
-        >
-                Create an account to explore the full range of features, or browse the catalog to see our new design in action.
-        </motion.p>
-              <div className="mt-8 flex flex-wrap gap-3">
-                {[
-                  { icon: Compass, label: "Discovery-led browsing" },
-                  { icon: ShieldCheck, label: "Clearer account flows" },
-                ].map(({ icon: Icon, label }) => (
-                  <span
-                    key={label}
-                    className="inline-flex items-center gap-2 rounded-full border border-white/14 bg-white/10 px-4 py-2 text-sm text-white/82"
-                  >
-                    <Icon className="h-4 w-4" />
-                    {label}
-                  </span>
-                ))}
-              </div>
-            </div>
+      <div className="w-full px-4 sm:px-6 lg:px-16 xl:px-24">
+        {/* MAIN CARD */}
         <motion.div
-          initial={{ opacity: 0, y: 20, scale: 0.9 }}
-          whileInView={{ opacity: 1, y: 0, scale: 1 }}
-          transition={{ duration: 0.6, delay: 0.4 }}
+          variants={container}
+          initial="hidden"
+          whileInView="visible"
           viewport={{ once: true }}
-              className="flex flex-col gap-4 lg:min-w-[260px]"
+          className="relative w-full rounded-3xl border border-border/60 bg-card/70 backdrop-blur p-8 sm:p-12 lg:p-16"
         >
-          <Link href="/register" passHref>
-            <Button
-              size="lg"
-                  className="h-14 rounded-2xl bg-white px-8 text-base font-semibold text-foreground shadow-xl hover:bg-white/92"
+          {/* Glow */}
+          <div className="absolute inset-0 -z-10 rounded-3xl bg-primary/5 blur-2xl opacity-40" />
+
+          <div className="grid gap-12 lg:grid-cols-2 lg:gap-20 items-center">
+            {/* LEFT CONTENT */}
+            <div className="space-y-6 max-w-xl">
+              {/* Badge */}
+              <motion.div
+                variants={fadeUp}
+                className="inline-flex items-center gap-2 rounded-full border bg-background/60 backdrop-blur px-4 py-1.5 text-xs text-primary"
+              >
+                <LibraryBig className="h-4 w-4" />
+                Get Started
+              </motion.div>
+
+              {/* Heading */}
+              <motion.h2
+                variants={fadeUp}
+                className="text-3xl sm:text-4xl lg:text-5xl font-semibold tracking-tight leading-tight"
+              >
+                Build your modern library
+                <span className="block text-primary">
+                  in minutes, not hours
+                </span>
+              </motion.h2>
+
+              {/* Description */}
+              <motion.p
+                variants={fadeUp}
+                className="text-muted-foreground text-lg text-justify"
+              >
+                Discover books, manage collections, and streamline your reading
+                experience with a system designed for real users. Everything is
+                built to be fast, intuitive, and reliable from day one.
+              </motion.p>
+            </div>
+
+            {/* RIGHT CTA PANEL */}
+            <motion.div
+              variants={fadeUp}
+              className="relative w-full rounded-2xl border border-border/60 bg-background/80 backdrop-blur p-6 sm:p-8 shadow-sm"
             >
-                  Create account <ArrowRight className="ml-2 h-5 w-5" />
-            </Button>
-          </Link>
-                <Link href="/catalog" passHref>
-                  <Button
-                    size="lg"
-                    variant="outline"
-                    className="h-14 rounded-2xl border-white/22 bg-white/8 px-8 text-base font-semibold text-white hover:bg-white/12"
+              {/* Panel Glow */}
+              <div className="absolute inset-0 -z-10 bg-primary/5 blur-xl rounded-2xl opacity-40" />
+
+              <div className="flex flex-col gap-4">
+                {/* PRIMARY BUTTON */}
+                <Link href="/register">
+                  <motion.div
+                    whileHover={{ scale: 1.04 }}
+                    whileTap={{ scale: 0.97 }}
                   >
-                    Browse catalog
-                  </Button>
+                    <Button className="w-full cursor-pointer rounded-xl h-12 text-base font-semibold shadow-md transition">
+                      Create account
+                      <ArrowRight className="ml-2 h-4 w-4" />
+                    </Button>
+                  </motion.div>
                 </Link>
-        </motion.div>
+
+                {/* SECONDARY BUTTON */}
+                <Link href="/catalog">
+                  <motion.div
+                    whileHover={{ scale: 1.03 }}
+                    whileTap={{ scale: 0.97 }}
+                  >
+                    <Button
+                      variant="outline"
+                      className="w-full cursor-pointer rounded-xl h-12 text-base hover:text-primary hover:border-primary transition"
+                    >
+                      Browse catalog
+                    </Button>
+                  </motion.div>
+                </Link>
+
+                {/* Helper Text (NO conflict now) */}
+                <motion.p
+                  variants={fadeUp}
+                  className="text-xs text-muted-foreground text-justify pt-2"
+                >
+                  No credit card required. Start exploring instantly and
+                  experience a seamless, modern library system built for real
+                  usage.
+                </motion.p>
+              </div>
+            </motion.div>
           </div>
-        </div>
+        </motion.div>
       </div>
     </section>
   );

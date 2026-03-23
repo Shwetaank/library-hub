@@ -1,7 +1,6 @@
 "use client";
 import HeroSection from "@/components/Hero/HeroSection";
 import FeaturesSection from "@/app/(public)/features/Features";
-import TestimonialSection from "@/components/Testimonial/TestimonialSection";
 import ClubsSection from "@/app/(public)/clubs/ClubsSection";
 import CTASection from "@/components/CTA/CTASection";
 
@@ -11,7 +10,6 @@ const HomePage = () => {
       <main className="grow">
         <HeroSection />
         <FeaturesSection />
-        <TestimonialSection />
         <ClubsSection />
         <CTASection />
       </main>

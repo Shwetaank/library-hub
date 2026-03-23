@@ -1,33 +1,22 @@
-import { NextResponse } from "next/server";
-import { Resend } from "resend";
+import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
-import { APP_URL } from "@/lib/app-url";
+import { Resend } from "resend";
 
-if (!process.env.RESEND_API_KEY) {
-  throw new Error("RESEND_API_KEY environment variable is not set");
-}
-
-const resend = new Resend(process.env.RESEND_API_KEY);
-
-const FROM_EMAIL = "LibraryHub <onboarding@resend.dev>";
-const WELCOME_SUBJECT = "Welcome to LibraryHub";
-
+/* ✅ Schema */
 const newsletterSchema = z.object({
-  email: z
-    .string()
-    .trim()
-    .toLowerCase()
-    .refine((value) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value), {
-      message: "Invalid email address",
-    }),
+  email: z.string().trim().toLowerCase().email(),
 });
 
+/* ✅ Default sender */
+const DEFAULT_FROM_EMAIL = "LibraryHub <onboarding@resend.dev>";
+const NEWSLETTER_SUBJECT = "You're subscribed to LibraryHub updates";
+
+/* ✅ Helper */
 const jsonResponse = (status: number, data: object) =>
   NextResponse.json(data, { status });
 
-const generateWelcomeEmail = () => {
+const generateNewsletterEmail = (appUrl: string) => {
   const year = new Date().getFullYear();
-  const ctaUrl = `${APP_URL}/welcome`;
 
   return `
 <!DOCTYPE html>
@@ -35,117 +24,36 @@ const generateWelcomeEmail = () => {
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Welcome to LibraryHub</title>
+  <title>${NEWSLETTER_SUBJECT}</title>
 </head>
-<body style="margin:0; padding:0; background-color:#f8fafc; font-family:Segoe UI,Arial,sans-serif; color:#0f172a;">
-  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="width:100%; margin:0; padding:32px 16px; background-color:#f8fafc;">
+<body style="margin:0;padding:0;background-color:#f4f7fb;font-family:Arial,Helvetica,sans-serif;color:#0f172a;">
+  <div style="display:none;max-height:0;overflow:hidden;opacity:0;">
+    Thanks for subscribing to LibraryHub. You will receive product updates, feature launches, and curated reading highlights.
+  </div>
+
+  <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="background-color:#f4f7fb;padding:32px 12px;">
     <tr>
       <td align="center">
-        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:640px; width:100%;">
+        <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="max-width:640px;background-color:#ffffff;border:1px solid #e2e8f0;border-radius:28px;overflow:hidden;box-shadow:0 24px 80px rgba(15,23,42,0.08);">
           <tr>
-            <td style="padding-bottom:16px; text-align:center;">
-              <span style="display:inline-block; font-size:12px; letter-spacing:0.18em; text-transform:uppercase; color:#64748b;">
-                LibraryHub Newsletter
-              </span>
-            </td>
-          </tr>
-
-          <tr>
-            <td style="border:1px solid #e2e8f0; border-radius:24px; overflow:hidden; background-color:#ffffff; box-shadow:0 20px 60px rgba(79,70,229,0.10);">
-              <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+            <td style="background:linear-gradient(135deg,#314158 0%,#4659a7 55%,#ec4899 100%);padding:18px 24px 0;">
+              <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="border-radius:22px 22px 0 0;">
                 <tr>
-                  <td style="padding:0; background:linear-gradient(135deg,#4f46e5 0%,#f59e0b 100%);">
-                    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:linear-gradient(180deg,rgba(255,255,255,0.06),rgba(255,255,255,0));">
-                      <tr>
-                        <td style="padding:36px 40px 28px;">
-                          <div style="display:inline-block; padding:8px 14px; border-radius:999px; background-color:rgba(255,255,255,0.14); color:#ffffff; font-size:12px; font-weight:600; letter-spacing:0.08em; text-transform:uppercase;">
-                            Welcome Onboard
-                          </div>
-                          <h1 style="margin:18px 0 0; color:#ffffff; font-size:34px; line-height:1.15; font-weight:700;">
-                            Welcome to LibraryHub
-                          </h1>
-                          <p style="margin:12px 0 0; max-width:460px; color:rgba(255,255,255,0.86); font-size:16px; line-height:1.7;">
-                            You are now subscribed to product updates, workflow improvements, and release notes built for modern library teams.
-                          </p>
-                        </td>
-                      </tr>
-                    </table>
-                  </td>
-                </tr>
+                  <td style="padding:10px 0 28px;">
+                    <div style="display:inline-block;padding:8px 14px;border-radius:999px;background:rgba(255,255,255,0.16);border:1px solid rgba(255,255,255,0.22);font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#ffffff;">
+                      Newsletter confirmed
+                    </div>
 
-                <tr>
-                  <td style="padding:36px 40px 10px;">
-                    <p style="margin:0; font-size:15px; line-height:1.7; color:#334155;">
-                      Hi there,
+                    <p style="margin:20px 0 0;font-size:13px;letter-spacing:0.14em;text-transform:uppercase;color:rgba(255,255,255,0.76);">
+                      LibraryHub
                     </p>
-                    <p style="margin:16px 0 0; font-size:16px; line-height:1.8; color:#475569;">
-                      Thanks for subscribing to <strong style="color:#0f172a;">LibraryHub</strong>. We will send you thoughtful updates on new features, circulation improvements, member workflow upgrades, and product refinements that help library operations run with more clarity.
-                    </p>
-                  </td>
-                </tr>
 
-                <tr>
-                  <td style="padding:22px 40px 8px;">
-                    <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
-                      <tr>
-                        <td style="padding:0 0 12px;">
-                          <div style="font-size:13px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; color:#4f46e5;">
-                            What to expect
-                          </div>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td style="padding:0;">
-                          <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:separate; border-spacing:0 12px;">
-                            <tr>
-                              <td style="width:28px; vertical-align:top; color:#4f46e5; font-size:18px; line-height:1.4;">•</td>
-                              <td style="font-size:15px; line-height:1.7; color:#475569;">Feature launches and release notes that matter to your daily operations.</td>
-                            </tr>
-                            <tr>
-                              <td style="width:28px; vertical-align:top; color:#f59e0b; font-size:18px; line-height:1.4;">•</td>
-                              <td style="font-size:15px; line-height:1.7; color:#475569;">Practical updates focused on circulation, catalog visibility, and member management.</td>
-                            </tr>
-                            <tr>
-                              <td style="width:28px; vertical-align:top; color:#4f46e5; font-size:18px; line-height:1.4;">•</td>
-                              <td style="font-size:15px; line-height:1.7; color:#475569;">A cleaner view into how LibraryHub is evolving for modern library teams.</td>
-                            </tr>
-                          </table>
-                        </td>
-                      </tr>
-                    </table>
-                  </td>
-                </tr>
+                    <h1 style="margin:10px 0 12px;font-size:32px;line-height:1.2;color:#ffffff;">
+                      Thanks for joining our update list
+                    </h1>
 
-                <tr>
-                  <td style="padding:20px 40px 0;">
-                    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border:1px solid rgba(79,70,229,0.12); border-radius:20px; background:linear-gradient(135deg,rgba(79,70,229,0.05),rgba(245,158,11,0.05));">
-                      <tr>
-                        <td style="padding:24px;">
-                          <div style="font-size:20px; font-weight:700; line-height:1.3; color:#0f172a;">
-                            Explore the welcome space
-                          </div>
-                          <p style="margin:10px 0 0; font-size:15px; line-height:1.7; color:#475569;">
-                            Start with the LibraryHub welcome page and get a quick view of the product direction, experience, and feature set.
-                          </p>
-                          <table role="presentation" cellpadding="0" cellspacing="0" style="margin-top:18px;">
-                            <tr>
-                              <td>
-                                <a href="${ctaUrl}" style="display:inline-block; padding:14px 24px; border-radius:999px; background:linear-gradient(135deg,#4f46e5 0%,#f59e0b 100%); color:#ffffff; text-decoration:none; font-size:14px; font-weight:700;">
-                                  Explore LibraryHub
-                                </a>
-                              </td>
-                            </tr>
-                          </table>
-                        </td>
-                      </tr>
-                    </table>
-                  </td>
-                </tr>
-
-                <tr>
-                  <td style="padding:24px 40px 36px;">
-                    <p style="margin:0; font-size:13px; line-height:1.7; color:#64748b;">
-                      You are receiving this email because you subscribed to LibraryHub updates. If this was not you, you can safely ignore this message.
+                    <p style="margin:0;max-width:500px;font-size:15px;line-height:1.7;color:rgba(255,255,255,0.88);">
+                      You are now subscribed to LibraryHub news. We will share product improvements, catalog highlights, and feature releases that support a smoother library experience.
                     </p>
                   </td>
                 </tr>
@@ -154,9 +62,96 @@ const generateWelcomeEmail = () => {
           </tr>
 
           <tr>
-            <td style="padding:18px 8px 0; text-align:center;">
-              <p style="margin:0; font-size:12px; line-height:1.7; color:#94a3b8;">
-                © ${year} LibraryHub. All rights reserved.
+            <td style="padding:32px 24px 12px;">
+              <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:22px;">
+                <tr>
+                  <td style="padding:22px 20px;">
+                    <p style="margin:0 0 8px;font-size:12px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#4659a7;">
+                      What you can expect
+                    </p>
+                    <p style="margin:0;font-size:15px;line-height:1.8;color:#475569;">
+                      Updates from LibraryHub are shaped around the current product flow: easier discovery, clearer borrowing journeys, real-time availability, and a more connected reading experience across the platform.
+                    </p>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <tr>
+            <td style="padding:8px 24px 0;">
+              <table width="100%" cellpadding="0" cellspacing="0" role="presentation">
+                <tr>
+                  <td style="padding-bottom:14px;">
+                    <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="background:#ffffff;border:1px solid #e2e8f0;border-radius:20px;">
+                      <tr>
+                        <td style="padding:18px 18px 16px;">
+                          <p style="margin:0 0 8px;font-size:16px;font-weight:700;color:#0f172a;">Discover faster</p>
+                          <p style="margin:0;font-size:14px;line-height:1.7;color:#64748b;">
+                            Hear about search upgrades, curated collections, and smarter ways to move from browsing to the right book.
+                          </p>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="padding-bottom:14px;">
+                    <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="background:#ffffff;border:1px solid #e2e8f0;border-radius:20px;">
+                      <tr>
+                        <td style="padding:18px 18px 16px;">
+                          <p style="margin:0 0 8px;font-size:16px;font-weight:700;color:#0f172a;">Borrow with clarity</p>
+                          <p style="margin:0;font-size:14px;line-height:1.7;color:#64748b;">
+                            Stay informed about improvements to availability tracking, borrowing workflows, and the overall member experience.
+                          </p>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="background:#fff7fb;border:1px solid #f3d3e5;border-radius:20px;">
+                      <tr>
+                        <td style="padding:18px 18px 16px;">
+                          <p style="margin:0 0 8px;font-size:16px;font-weight:700;color:#0f172a;">Stay in sync</p>
+                          <p style="margin:0;font-size:14px;line-height:1.7;color:#64748b;">
+                            Expect occasional notes about new features, reading clubs, platform polish, and other LibraryHub launches worth checking out.
+                          </p>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <tr>
+            <td style="padding:28px 24px 16px;text-align:center;">
+              <a
+                href="${appUrl}/welcome"
+                style="display:inline-block;padding:14px 28px;border-radius:999px;background:linear-gradient(135deg,#314158 0%,#4659a7 70%,#ec4899 100%);color:#ffffff;font-size:14px;font-weight:700;text-decoration:none;box-shadow:0 14px 30px rgba(70,89,167,0.28);"
+              >
+                Explore LibraryHub
+              </a>
+            </td>
+          </tr>
+
+          <tr>
+            <td style="padding:0 24px 28px;text-align:center;">
+              <p style="margin:0;font-size:13px;line-height:1.7;color:#64748b;">
+                You are receiving this email because you subscribed to LibraryHub updates.
+                If this was not you, you can safely ignore this message.
+              </p>
+            </td>
+          </tr>
+
+          <tr>
+            <td style="padding:18px 24px;background:#f8fafc;border-top:1px solid #e2e8f0;text-align:center;">
+              <p style="margin:0;font-size:12px;line-height:1.8;color:#94a3b8;">
+                © ${year} LibraryHub<br />
+                Built for discovery, borrowing, and a smoother library workflow.
               </p>
             </td>
           </tr>
@@ -169,34 +164,56 @@ const generateWelcomeEmail = () => {
 `;
 };
 
-const sendWelcomeEmail = async (to: string) => {
-  await resend.emails.send({
-    from: FROM_EMAIL,
-    to,
-    subject: WELCOME_SUBJECT,
-    html: generateWelcomeEmail(),
-  });
-};
-
-export async function POST(req: Request) {
+/* 🚀 POST Handler */
+export async function POST(req: NextRequest) {
   try {
-    const body = await req.json();
-    const validation = newsletterSchema.safeParse(body);
-
-    if (!validation.success) {
-      return jsonResponse(400, {
-        error: "Invalid request",
-        details: validation.error.flatten().fieldErrors,
+    if (!process.env.RESEND_API_KEY) {
+      return jsonResponse(500, {
+        message: "Newsletter email is not configured yet.",
       });
     }
 
-    await sendWelcomeEmail(validation.data.email);
+    const body = await req.json();
+    const parsed = newsletterSchema.safeParse(body);
 
-    return jsonResponse(200, { success: true });
+    if (!parsed.success) {
+      return jsonResponse(400, {
+        message: "Invalid email address",
+        details: parsed.error.flatten().fieldErrors,
+      });
+    }
+
+    const resend = new Resend(process.env.RESEND_API_KEY);
+    const from = process.env.RESEND_FROM_EMAIL?.trim() || DEFAULT_FROM_EMAIL;
+    const appUrl =
+      process.env.NEXT_PUBLIC_APP_URL?.trim() || "http://localhost:3000";
+
+    const { email } = parsed.data;
+    const html = generateNewsletterEmail(appUrl);
+
+    const { error } = await resend.emails.send({
+      from,
+      to: email,
+      subject: NEWSLETTER_SUBJECT,
+      html,
+    });
+
+    if (error) {
+      console.error("Newsletter email error:", error);
+
+      return jsonResponse(502, {
+        message:
+          error.message ||
+          "Subscription could not be completed due to email provider error.",
+      });
+    }
+
+    return jsonResponse(200, { message: "Subscription successful!" });
   } catch (error) {
-    console.error("Newsletter subscription error:", error);
+    console.error("Newsletter API error:", error);
+
     return jsonResponse(500, {
-      error: "Internal Server Error",
+      message: "An error occurred during subscription.",
     });
   }
 }

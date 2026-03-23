@@ -1,129 +1,133 @@
 "use client";
 import React from "react";
-import { BookCopy, BookOpenCheck, Search, ShieldCheck, UsersRound, WandSparkles } from "lucide-react";
-import { motion, type Variants } from "framer-motion";
+import {
+  BookCopy,
+  BookOpenCheck,
+  Search,
+  ShieldCheck,
+  UsersRound,
+  WandSparkles,
+} from "lucide-react";
+import { motion } from "framer-motion";
 
-const features = [
+type Feature = {
+  title: string;
+  description: string;
+  icon: React.ElementType;
+};
+
+const features: Feature[] = [
   {
-    title: "Discovery that keeps momentum",
+    title: "Smooth discovery flow",
     description:
-      "Move from search to detail to availability in a way that feels structured, fast, and editorially clear.",
+      "Move from search to book details without friction. Everything feels fast and connected.",
     icon: BookOpenCheck,
-    accent: "bg-primary/10 text-primary",
   },
   {
-    title: "Search tuned for real library browsing",
+    title: "Powerful search",
     description:
-      "Readers can explore by title, author, genre, and keyword without fighting the interface.",
+      "Find books by title, author, or genre instantly without friction.",
     icon: Search,
-    accent: "bg-emerald-500/12 text-emerald-600 dark:text-emerald-300",
   },
   {
-    title: "Borrowing-aware catalog state",
+    title: "Real-time availability",
     description:
-      "Availability, loan actions, and book status stay visible so readers and staff can make decisions faster.",
+      "Always know what’s available, borrowed, or reserved instantly.",
     icon: BookCopy,
-    accent: "bg-amber-500/14 text-amber-600 dark:text-amber-300",
   },
   {
-    title: "Member workspace with continuity",
+    title: "User workspace",
     description:
-      "Favorites, history, and account actions feel connected instead of scattered across separate flows.",
+      "Favorites, history, and account actions in one unified space.",
     icon: UsersRound,
-    accent: "bg-sky-500/12 text-sky-600 dark:text-sky-300",
   },
   {
-    title: "Clubs and community layers",
+    title: "Community features",
     description:
-      "Reading groups add discovery and shared context without pulling the product away from its library core.",
+      "Reading clubs and shared spaces enhance discovery and engagement.",
     icon: WandSparkles,
-    accent: "bg-rose-500/12 text-rose-600 dark:text-rose-300",
   },
   {
-    title: "Trust built into the interface",
+    title: "Secure system",
     description:
-      "Account protection, role-aware actions, and calmer UI language make the system easier to trust.",
+      "Role-based access and protection built directly into the experience.",
     icon: ShieldCheck,
-    accent: "bg-violet-500/12 text-violet-600 dark:text-violet-300",
   },
 ];
 
-const FeaturesSection = () => {
-  const containerVariants: Variants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1,
-      },
-    },
-  };
-
-  const itemVariants: Variants = {
-    hidden: { opacity: 0, y: 20, scale: 0.95 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      scale: 1,
-      transition: {
-        duration: 0.5,
-        ease: [0.22, 1, 0.36, 1],
-      },
-    },
-  };
-
+const FeaturesSection: React.FC = () => {
   return (
-    <section className="px-4 py-16 sm:px-6 sm:py-20">
-      <div className="mx-auto max-w-[1440px]">
-        <div className="mx-auto mb-14 max-w-3xl text-center">
-          <div className="section-kicker">Core Capabilities</div>
-          <motion.h2
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="section-title mt-6"
-          >
-            Everything you need for a seamless library experience.
-          </motion.h2>
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            className="section-copy mt-5 !text-lg"
-          >
-            A comprehensive set of features designed to enhance discovery, streamline borrowing, and foster a vibrant reading community.
-          </motion.p>
+    <section className="relative w-full min-h-screen flex items-center overflow-hidden">
+      {/* 🌈 Background */}
+      <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_top,rgba(99,102,241,0.15),transparent_50%),radial-gradient(circle_at_bottom_right,rgba(236,72,153,0.10),transparent_45%)]" />
+
+      {/* ✨ Grid */}
+      <div className="absolute inset-0 -z-10 opacity-[0.03] bg-[linear-gradient(to_right,#000_1px,transparent_1px),linear-gradient(to_bottom,#000_1px,transparent_1px)] bg-size-[48px_48px]" />
+
+      <div className="w-full px-4 sm:px-6 lg:px-16 xl:px-24">
+        {/* HEADER */}
+        <div className="mx-auto max-w-3xl text-center">
+          <div className="inline-flex items-center gap-2 rounded-full border bg-background/60 backdrop-blur px-4 py-1.5 text-xs text-primary shadow-sm">
+            ✨ Core Capabilities
+          </div>
+
+          <h2 className="mt-6 text-3xl sm:text-4xl lg:text-5xl font-semibold tracking-tight leading-tight">
+            Everything you need to run a modern library
+          </h2>
+
+          <p className="mt-5 text-muted-foreground text-lg">
+            Built for discovery, borrowing, and seamless user experience.
+          </p>
         </div>
-        <motion.div
-          className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3"
-          variants={containerVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true }}
-        >
-          {features.map((feature) => (
-            <motion.div
-              key={feature.title}
-              variants={itemVariants}
-              className="ui-card-elevated rounded-[1.8rem] p-7"
-            >
-              <div className={`flex h-14 w-14 items-center justify-center rounded-[1.2rem] ${feature.accent}`}>
-                <feature.icon className="h-6 w-6" />
-              </div>
-              <div className="mt-6">
-                <div className="font-mono text-[0.72rem] uppercase tracking-[0.22em] text-muted-foreground">
-                  Product detail
+
+        {/* GRID */}
+        <div className="mt-20 grid gap-10 sm:grid-cols-2 lg:grid-cols-3">
+          {features.map((feature, index) => {
+            const Icon = feature.icon;
+
+            return (
+              <motion.div
+                key={feature.title}
+                initial={{ opacity: 0, y: 50, scale: 0.95 }}
+                whileInView={{ opacity: 1, y: 0, scale: 1 }}
+                transition={{
+                  duration: 0.5,
+                  delay: index * 0.08,
+                  ease: [0.22, 1, 0.36, 1],
+                }}
+                viewport={{ once: true }}
+                className="group relative cursor-pointer overflow-hidden rounded-2xl border border-border/60 bg-card/70 backdrop-blur p-8 shadow-sm transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl hover:border-primary/40 text-center"
+              >
+                {/* Top Gradient Line */}
+                <div className="absolute inset-x-0 top-0 h-0.5 bg-linear-to-r from-primary via-pink-500 to-primary opacity-0 group-hover:opacity-100 transition" />
+
+                {/* Glow */}
+                <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition duration-300 bg-primary/5 blur-2xl" />
+
+                {/* ICON */}
+                <div className="relative z-10 mx-auto flex h-14 w-14 items-center justify-center rounded-xl bg-linear-to-br from-primary/20 to-pink-500/10 text-primary shadow-inner">
+                  <Icon className="h-6 w-6" />
                 </div>
-                <h3 className="mt-3 text-2xl font-semibold tracking-[-0.05em] text-foreground">
-                  {feature.title}
-                </h3>
-                <p className="mt-4 text-base leading-8 text-muted-foreground">
-                  {feature.description}
-                </p>
-              </div>
-            </motion.div>
-          ))}
-        </motion.div>
+
+                {/* CONTENT */}
+                <div className="relative z-10 mt-6 space-y-3">
+                  <h3 className="text-lg font-semibold tracking-tight">
+                    {feature.title}
+                  </h3>
+
+                  <p className="text-sm leading-relaxed text-muted-foreground text-justify">
+                    {feature.description}
+                  </p>
+                </div>
+
+                {/* Arrow */}
+                <div className="absolute bottom-5 right-5 opacity-0 translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition">
+                  <span className="text-primary text-sm">→</span>
+                </div>
+              </motion.div>
+            );
+          })}
+        </div>
       </div>
     </section>
   );

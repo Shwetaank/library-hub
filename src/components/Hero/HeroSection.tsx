@@ -8,7 +8,7 @@ import { ArrowRight, UsersRound, BookCopy, ScanSearch } from "lucide-react";
 
 const HeroSection = () => {
   return (
-    <section className="relative left-1/2 right-1/2 w-screen -ml-[50vw] -mr-[50vw] min-h-screen flex items-center overflow-hidden">
+    <section className="relative w-full min-h-screen flex items-center overflow-hidden">
       {/* 🌈 Background */}
       <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_top,rgba(99,102,241,0.18),transparent_50%),radial-gradient(circle_at_bottom_right,rgba(236,72,153,0.12),transparent_45%)]" />
 
@@ -25,8 +25,8 @@ const HeroSection = () => {
             transition={{ duration: 0.7 }}
           >
             {/* Badge */}
-            <div className="inline-flex items-center gap-2 rounded-full border bg-background/60 backdrop-blur px-3 py-1 text-xs text-muted-foreground shadow-sm">
-              <ScanSearch size={14} />
+            <div className="inline-flex items-center gap-2 rounded-full border bg-background/60 backdrop-blur px-3 py-1 text-xs text-pink-500 shadow-sm">
+              <ScanSearch size={16} />
               Smart Library Platform
             </div>
 
@@ -39,7 +39,7 @@ const HeroSection = () => {
             </h1>
 
             {/* Subtext */}
-            <p className="mt-6 max-w-lg text-lg text-muted-foreground">
+            <p className="mt-6 max-w-lg text-lg text-muted-foreground text-justify">
               Discover, borrow, and manage books effortlessly with a modern
               system built for real users.
             </p>
@@ -47,14 +47,14 @@ const HeroSection = () => {
             {/* Stats */}
             <div className="mt-8 flex gap-8">
               <div>
-                <p className="text-xl font-semibold">10k+</p>
+                <p className="text-xl font-semibold animate-pulse">10k+</p>
                 <p className="text-sm text-muted-foreground flex items-center gap-1">
                   <UsersRound size={14} /> Users
                 </p>
               </div>
 
               <div>
-                <p className="text-xl font-semibold">50k+</p>
+                <p className="text-xl font-semibold animate-pulse">50k+</p>
                 <p className="text-sm text-muted-foreground flex items-center gap-1">
                   <BookCopy size={14} /> Books
                 </p>
@@ -62,22 +62,20 @@ const HeroSection = () => {
             </div>
 
             {/* CTA */}
-            <div className="mt-10 flex flex-wrap items-center gap-4">
+            <div className="mt-10 flex flex-wrap items-center gap-8 ">
               <Link href="/register">
-                <Button className="rounded-xl px-6 py-5 text-base shadow-lg hover:scale-[1.04] transition">
+                <Button className="rounded-xl cursor-pointer px-6 py-5 text-base shadow-lg hover:scale-[1.04] transition">
                   Get started
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
               </Link>
 
-              <Link href="/catalog">
-                <Button
-                  variant="ghost"
-                  className="rounded-xl px-6 py-5 text-base hover:bg-muted"
-                >
-                  Browse catalog →
-                </Button>
-              </Link>
+              <Button
+                variant="outline"
+                className="rounded-xl cursor-pointer px-6 py-5 hover:text-primary hover:border-primary"
+              >
+                Browse catalog →
+              </Button>
             </div>
           </motion.div>
 

@@ -8,10 +8,5 @@
 - Environments: .env
 
 ✓ Starting...
-Creating turbopack project {
-  dir: 'D:\\Projects\\AlmaBetter\\Specialisation Track\\Module 1 Capstone Project\\library-hub',
-  testMode: true
-}
-✓ Ready in 1330ms
-○ Compiling / ...
- GET / 200 in 4.0s (compile: 3.6s, render: 420ms)
+  Suggestion: If you intended to restart next dev, terminate the other process, and then try again.
+[?25h
