@@ -1,67 +1,62 @@
-﻿"use client";
+"use client";
 
 import React from "react";
 import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 
-/**
- * Props for LiveCounter component
- * @property value - The numeric value to animate towards
- */
+import { cn } from "@/lib/utils";
+
+/* -------------------------------------------------------------------------- */
+/* TYPES */
+/* -------------------------------------------------------------------------- */
+
 interface LiveCounterProps {
   value: number;
+  className?: string;
+  suffix?: string;
+  duration?: number;
+  start?: number;
 }
 
-/**
- * LiveCounter Component
- *
- * Smoothly animates numeric value changes using Framer Motion.
- * - Uses motion value for reactive updates
- * - Applies spring physics for smooth animation
- * - Formats output with locale-based number formatting
- *
- * Used for live platform metrics (readers, books, transactions).
- */
-const LiveCounter: React.FC<LiveCounterProps> = ({ value }) => {
-  /**
-   * Base motion value that tracks the current animated number.
-   * Initialized with the incoming value.
-   */
-  const motionValue = useMotionValue(value);
+/* -------------------------------------------------------------------------- */
+/* COMPONENT */
+/* -------------------------------------------------------------------------- */
 
-  /**
-   * Spring animation applied to the motion value.
-   * - stiffness controls speed
-   * - damping controls bounce
-   */
+const LiveCounter: React.FC<LiveCounterProps> = ({
+  value,
+  className,
+  suffix = "",
+  duration = 0.8,
+  start = 0,
+}) => {
+  const motionValue = useMotionValue(start);
+
   const spring = useSpring(motionValue, {
-    stiffness: 60,
+    stiffness: 80,
     damping: 20,
+    mass: Math.max(duration, 0.1),
   });
 
-  /**
-   * Transform the animated value:
-   * - Round down to integer
-   * - Format with thousand separators (e.g., 5,000)
-   */
-  const display = useTransform(spring, (latest) =>
+  const display = useTransform(spring, (latest: number) =>
     Math.floor(latest).toLocaleString("en-US"),
   );
 
-  /**
-   * When `value` prop changes:
-   * - Update the motion value
-   * - Spring automatically animates to the new number
-   */
   React.useEffect(() => {
     motionValue.set(value);
   }, [value, motionValue]);
 
   return (
-    <motion.span className="accent-text text-5xl sm:text-6xl font-bold font-mono">
-      {display}
-    </motion.span>
+    <span
+      className={cn(
+        "flex items-end gap-1 font-mono font-semibold tracking-tight",
+        className,
+      )}
+    >
+      <motion.span>{display}</motion.span>
+      {suffix && (
+        <span className="text-[0.8em] text-inherit opacity-80">{suffix}</span>
+      )}
+    </span>
   );
 };
 
 export default LiveCounter;
-

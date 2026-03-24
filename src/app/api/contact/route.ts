@@ -1,15 +1,26 @@
 import { NextResponse } from "next/server";
 import { Resend } from "resend";
 import { z } from "zod";
+
 import { prisma } from "@/lib/prisma";
 
-/* ------------------ CONFIG ------------------ */
-
 const FROM_EMAIL = "LibraryHub <onboarding@resend.dev>";
-const ADMIN_SUBJECT = "📚 New Demo Request - LibraryHub";
-const USER_SUBJECT = "We Received Your Demo Request 🚀";
+const ADMIN_SUBJECT = "New Demo Request - LibraryHub";
+const USER_SUBJECT = "We received your LibraryHub request";
 
-/* ------------------ VALIDATION ------------------ */
+const EMAIL_THEME = {
+  background: "#f4efe7",
+  surface: "#fcfaf6",
+  surfaceSoft: "#f1ebe2",
+  border: "#ddd3c5",
+  text: "#22313f",
+  muted: "#667685",
+  primary: "#3f566d",
+  primaryStrong: "#2d445a",
+  accent: "#c69757",
+  accentSoft: "#f5e7d1",
+  white: "#ffffff",
+} as const;
 
 const contactSchema = z.object({
   name: z.string().trim().min(2).max(100),
@@ -18,12 +29,8 @@ const contactSchema = z.object({
   message: z.string().trim().min(10).max(1000),
 });
 
-/* ------------------ RESPONSE HELPER ------------------ */
-
 const jsonResponse = (status: number, data: object) =>
   NextResponse.json(data, { status });
-
-/* ------------------ HTML ESCAPE ------------------ */
 
 const escapeHtml = (str: string) =>
   str.replace(/[&<>"']/g, (char) => {
@@ -37,7 +44,18 @@ const escapeHtml = (str: string) =>
     return map[char] || char;
   });
 
-/* ------------------ ADMIN EMAIL TEMPLATE ------------------ */
+const detailRow = (label: string, value: string) => `
+  <tr>
+    <td style="padding:0 0 14px;font-size:12px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:${EMAIL_THEME.muted};">
+      ${label}
+    </td>
+  </tr>
+  <tr>
+    <td style="padding:0 0 20px;font-size:15px;line-height:1.75;color:${EMAIL_THEME.text};">
+      ${value}
+    </td>
+  </tr>
+`;
 
 const generateAdminContactEmail = ({
   name,
@@ -56,139 +74,194 @@ const generateAdminContactEmail = ({
 
   return `
 <!DOCTYPE html>
-<html>
-<body style="margin:0;padding:0;background:#f3f4f6;font-family:Arial,sans-serif;">
-<table width="100%" cellpadding="0" cellspacing="0" style="padding:40px 0;">
-<tr>
-<td align="center">
+<html lang="en">
+  <body style="margin:0;padding:0;background:${EMAIL_THEME.background};font-family:Arial,Helvetica,sans-serif;color:${EMAIL_THEME.text};">
+    <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="background:${EMAIL_THEME.background};padding:28px 12px;">
+      <tr>
+        <td align="center">
+          <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="max-width:680px;">
+            <tr>
+              <td>
+                <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="background:${EMAIL_THEME.surface};border:1px solid ${EMAIL_THEME.border};border-radius:32px;overflow:hidden;box-shadow:0 28px 90px rgba(34,49,63,0.10);">
+                  <tr>
+                    <td style="padding:0;background:${EMAIL_THEME.primaryStrong};background-image:linear-gradient(135deg,${EMAIL_THEME.primaryStrong} 0%,${EMAIL_THEME.primary} 72%,#6a7f91 100%);">
+                      <table width="100%" cellpadding="0" cellspacing="0" role="presentation">
+                        <tr>
+                          <td style="padding:28px 28px 30px;">
+                            <div style="display:inline-block;padding:8px 14px;border-radius:999px;background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.16);font-size:11px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:${EMAIL_THEME.white};">
+                              Internal notification
+                            </div>
+                            <p style="margin:22px 0 0;font-size:12px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:rgba(255,255,255,0.68);">
+                              LibraryHub Contact
+                            </p>
+                            <h1 style="margin:14px 0 12px;font-size:34px;line-height:1.18;color:${EMAIL_THEME.white};">
+                              New demo request received.
+                            </h1>
+                            <p style="margin:0;max-width:520px;font-size:15px;line-height:1.8;color:rgba(255,255,255,0.84);">
+                              A new inquiry came in through the LibraryHub contact page.
+                              The details are below and ready for follow-up.
+                            </p>
+                          </td>
+                        </tr>
+                      </table>
+                    </td>
+                  </tr>
 
-<table width="600" cellpadding="0" cellspacing="0"
-style="background:#ffffff;border-radius:16px;overflow:hidden;
-box-shadow:0 10px 35px rgba(0,0,0,0.08);">
+                  <tr>
+                    <td style="padding:24px;">
+                      <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="background:${EMAIL_THEME.surfaceSoft};border:1px solid ${EMAIL_THEME.border};border-radius:24px;">
+                        <tr>
+                          <td style="padding:22px 22px 18px;">
+                            <table width="100%" cellpadding="0" cellspacing="0" role="presentation">
+                              ${detailRow("Full name", name)}
+                              ${detailRow("Email", email)}
+                              ${detailRow("Organization", organization)}
+                              ${detailRow("Message", message)}
+                            </table>
+                          </td>
+                        </tr>
+                      </table>
+                    </td>
+                  </tr>
 
-<tr>
-<td style="background:linear-gradient(90deg,#6D28D9,#EC4899);
-padding:30px 40px;text-align:center;">
-<h2 style="margin:0;color:#ffffff;">📚 New Demo Request</h2>
-<p style="margin:8px 0 0;color:#e0e7ff;font-size:14px;">
-LibraryHub Contact Submission
-</p>
-</td>
-</tr>
+                  <tr>
+                    <td style="padding:0 24px 24px;">
+                      <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="background:${EMAIL_THEME.accentSoft};border:1px solid #e8d3b0;border-radius:22px;">
+                        <tr>
+                          <td style="padding:18px 20px;">
+                            <p style="margin:0 0 8px;font-size:12px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:${EMAIL_THEME.primary};">
+                              Request ID
+                            </p>
+                            <p style="margin:0;font-size:16px;font-weight:700;color:${EMAIL_THEME.text};">
+                              #${requestId}
+                            </p>
+                          </td>
+                        </tr>
+                      </table>
+                    </td>
+                  </tr>
 
-<tr>
-<td style="padding:40px;">
-<table width="100%" cellpadding="8" cellspacing="0"
-style="font-size:14px;color:#374151;">
-<tr><td style="font-weight:600;width:140px;">Full Name:</td><td>${name}</td></tr>
-<tr><td style="font-weight:600;">Email:</td><td>${email}</td></tr>
-<tr><td style="font-weight:600;">Organization:</td><td>${organization}</td></tr>
-<tr>
-<td style="font-weight:600;vertical-align:top;">Message:</td>
-<td style="line-height:1.6;">${message}</td>
-</tr>
-</table>
-
-<div style="margin-top:30px;padding:14px 16px;
-background:#f9fafb;border-radius:10px;
-font-size:12px;color:#6b7280;">
-Request ID: ${requestId}
-</div>
-</td>
-</tr>
-
-<tr>
-<td style="border-top:1px solid #e5e7eb;"></td>
-</tr>
-
-<tr>
-<td style="padding:24px;text-align:center;
-font-size:12px;color:#9ca3af;">
-© ${year} LibraryHub. Internal notification.
-</td>
-</tr>
-
-</table>
-</td>
-</tr>
-</table>
-</body>
+                  <tr>
+                    <td style="padding:18px 24px 24px;background:${EMAIL_THEME.surfaceSoft};border-top:1px solid ${EMAIL_THEME.border};text-align:center;">
+                      <p style="margin:0;font-size:12px;line-height:1.9;color:${EMAIL_THEME.muted};">
+                        Copyright ${year} LibraryHub<br />
+                        Internal contact notification.
+                      </p>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </body>
 </html>
 `;
 };
 
-/* ------------------ USER EMAIL TEMPLATE ------------------ */
-
-const generateUserConfirmationEmail = (name: string) => {
+const generateUserConfirmationEmail = (name: string, appUrl: string) => {
   const year = new Date().getFullYear();
+  const siteUrl = appUrl.endsWith("/") ? appUrl.slice(0, -1) : appUrl;
 
   return `
 <!DOCTYPE html>
-<html>
-<body style="margin:0;padding:0;background:#f3f4f6;font-family:Arial,sans-serif;">
-<table width="100%" cellpadding="0" cellspacing="0" style="padding:40px 0;">
-<tr>
-<td align="center">
+<html lang="en">
+  <body style="margin:0;padding:0;background:${EMAIL_THEME.background};font-family:Arial,Helvetica,sans-serif;color:${EMAIL_THEME.text};">
+    <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="background:${EMAIL_THEME.background};padding:28px 12px;">
+      <tr>
+        <td align="center">
+          <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="max-width:640px;">
+            <tr>
+              <td>
+                <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="background:${EMAIL_THEME.surface};border:1px solid ${EMAIL_THEME.border};border-radius:32px;overflow:hidden;box-shadow:0 28px 90px rgba(34,49,63,0.10);">
+                  <tr>
+                    <td style="padding:0;background:${EMAIL_THEME.primaryStrong};background-image:linear-gradient(135deg,${EMAIL_THEME.primaryStrong} 0%,${EMAIL_THEME.primary} 72%,#6a7f91 100%);">
+                      <table width="100%" cellpadding="0" cellspacing="0" role="presentation">
+                        <tr>
+                          <td style="padding:28px 28px 30px;">
+                            <div style="display:inline-block;padding:8px 14px;border-radius:999px;background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.16);font-size:11px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:${EMAIL_THEME.white};">
+                              Request received
+                            </div>
+                            <p style="margin:22px 0 0;font-size:12px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:rgba(255,255,255,0.68);">
+                              LibraryHub
+                            </p>
+                            <h1 style="margin:14px 0 12px;font-size:34px;line-height:1.18;color:${EMAIL_THEME.white};">
+                              Thanks, ${name}. We have your request.
+                            </h1>
+                            <p style="margin:0;max-width:500px;font-size:15px;line-height:1.8;color:rgba(255,255,255,0.84);">
+                              Your note is in. We will review it and reply within 24
+                              hours with the most useful next step.
+                            </p>
+                          </td>
+                        </tr>
+                      </table>
+                    </td>
+                  </tr>
 
-<table width="560" cellpadding="0" cellspacing="0"
-style="background:#ffffff;border-radius:16px;
-box-shadow:0 10px 35px rgba(0,0,0,0.08);overflow:hidden;">
+                  <tr>
+                    <td style="padding:24px;">
+                      <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="background:${EMAIL_THEME.surfaceSoft};border:1px solid ${EMAIL_THEME.border};border-radius:24px;">
+                        <tr>
+                          <td style="padding:22px 22px 20px;">
+                            <p style="margin:0 0 10px;font-size:12px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:${EMAIL_THEME.primary};">
+                              What happens next
+                            </p>
+                            <p style="margin:0;font-size:15px;line-height:1.8;color:${EMAIL_THEME.muted};">
+                              We will review your message, decide whether a demo,
+                              product walkthrough, or implementation conversation fits
+                              best, and follow up with a thoughtful response.
+                            </p>
+                          </td>
+                        </tr>
+                      </table>
+                    </td>
+                  </tr>
 
-<tr>
-<td style="background:linear-gradient(90deg,#6D28D9,#EC4899);
-padding:30px 40px;text-align:center;">
-<h2 style="margin:0;color:#ffffff;">You’re All Set 🎉</h2>
-</td>
-</tr>
+                  <tr>
+                    <td style="padding:0 24px 24px;">
+                      <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="background:${EMAIL_THEME.primaryStrong};background-image:linear-gradient(180deg,${EMAIL_THEME.primary} 0%,${EMAIL_THEME.primaryStrong} 100%);border-radius:26px;border:1px solid #55697d;">
+                        <tr>
+                          <td style="padding:24px 22px;text-align:center;">
+                            <p style="margin:0 0 10px;font-size:12px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:rgba(255,255,255,0.68);">
+                              In the meantime
+                            </p>
+                            <p style="margin:0 0 20px;font-size:16px;line-height:1.8;color:rgba(255,255,255,0.84);">
+                              You can continue exploring the product while our team
+                              prepares the right response.
+                            </p>
+                            <a
+                              href="${siteUrl}/catalog"
+                              style="display:inline-block;padding:14px 28px;border-radius:999px;background:${EMAIL_THEME.accent};color:${EMAIL_THEME.text};font-size:14px;font-weight:700;text-decoration:none;box-shadow:0 14px 28px rgba(0,0,0,0.16);"
+                            >
+                              Browse LibraryHub
+                            </a>
+                          </td>
+                        </tr>
+                      </table>
+                    </td>
+                  </tr>
 
-<tr>
-<td style="padding:40px;">
-<p style="margin:0 0 16px;font-size:15px;color:#374151;">
-Hi ${name},
-</p>
-
-<p style="margin:0 0 16px;font-size:15px;line-height:1.7;color:#4b5563;">
-Thank you for requesting a demo of <strong>LibraryHub</strong>.
-</p>
-
-<p style="margin:0 0 24px;font-size:15px;line-height:1.7;color:#4b5563;">
-Our team will contact you within 24 hours.
-</p>
-
-<div style="text-align:center;margin-top:20px;">
-<span style="display:inline-block;
-padding:12px 24px;
-background:#6D28D9;
-color:#ffffff;
-border-radius:10px;
-font-size:14px;">
-We’re excited to connect with you 🚀
-</span>
-</div>
-</td>
-</tr>
-
-<tr>
-<td style="border-top:1px solid #e5e7eb;"></td>
-</tr>
-
-<tr>
-<td style="padding:24px;text-align:center;
-font-size:12px;color:#9ca3af;">
-© ${year} LibraryHub. All rights reserved.
-</td>
-</tr>
-
-</table>
-</td>
-</tr>
-</table>
-</body>
+                  <tr>
+                    <td style="padding:18px 24px 24px;background:${EMAIL_THEME.surfaceSoft};border-top:1px solid ${EMAIL_THEME.border};text-align:center;">
+                      <p style="margin:0;font-size:12px;line-height:1.9;color:${EMAIL_THEME.muted};">
+                        Copyright ${year} LibraryHub<br />
+                        Built for discovery, borrowing, and calmer workflows.
+                      </p>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </body>
 </html>
 `;
 };
-
-/* ------------------ API ROUTE ------------------ */
 
 export async function POST(req: Request) {
   try {
@@ -197,6 +270,8 @@ export async function POST(req: Request) {
     }
 
     const resend = new Resend(process.env.RESEND_API_KEY);
+    const appUrl =
+      process.env.NEXT_PUBLIC_APP_URL?.trim() || "http://localhost:3000";
 
     const body = await req.json();
     const parsed = contactSchema.safeParse(body);
@@ -210,13 +285,11 @@ export async function POST(req: Request) {
 
     const { name, email, organization, message } = parsed.data;
 
-    /* Escape user input */
     const safeName = escapeHtml(name);
     const safeEmail = escapeHtml(email);
     const safeOrg = escapeHtml(organization);
     const safeMessage = escapeHtml(message);
 
-    /* 1️⃣ Store in DB */
     const contact = await prisma.contactRequest.create({
       data: {
         name,
@@ -226,7 +299,6 @@ export async function POST(req: Request) {
       },
     });
 
-    /* 2️⃣ Send Emails in Parallel */
     await Promise.all([
       resend.emails.send({
         from: FROM_EMAIL,
@@ -240,12 +312,11 @@ export async function POST(req: Request) {
           requestId: contact.id,
         }),
       }),
-
       resend.emails.send({
         from: FROM_EMAIL,
         to: email,
         subject: USER_SUBJECT,
-        html: generateUserConfirmationEmail(safeName),
+        html: generateUserConfirmationEmail(safeName, appUrl),
       }),
     ]);
 
